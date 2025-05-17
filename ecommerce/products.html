@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品列表 - 多彩商城</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">多彩商城</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">首页</a>
+                    </li>
+                    <!-- 一级菜单：商品分类 -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            商品分类
+                        </a>
+                        <!-- 二级菜单 -->
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="products.html?category=electronics">电子产品</a></li>
+                            <li><a class="dropdown-item" href="products.html?category=clothing">服装鞋包</a></li>
+                            <li><a class="dropdown-item" href="products.html?category=home">家居生活</a></li>
+                            <li><a class="dropdown-item" href="products.html?category=beauty">美妆个护</a></li>
+                            <li><a class="dropdown-item" href="products.html?category=sports">运动户外</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item active" href="products.html">全部商品</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html?tag=new">新品上市</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html?tag=sale">特价促销</a>
+                    </li>
+                </ul>
+                <form class="d-flex me-3">
+                    <div class="input-group">
+                        <input class="form-control" type="search" placeholder="搜索商品..." aria-label="Search">
+                        <button class="btn btn-light" type="submit"><i class="bi bi-search"></i></button>
+                    </div>
+                </form>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">
+                            <i class="bi bi-cart3"></i> 购物车
+                            <span class="badge bg-danger rounded-pill cart-count">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle"></i> 我的账户
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="login.html">登录</a></li>
+                            <li><a class="dropdown-item" href="register.html">注册</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="user-profile.html">个人中心</a></li>
+                            <li><a class="dropdown-item" href="user-profile.html?tab=orders">我的订单</a></li>
+                            <li><a class="dropdown-item" href="user-profile.html?tab=wishlist">我的收藏</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 面包屑导航 -->
+    <div class="container py-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">首页</a></li>
+                <li class="breadcrumb-item active" aria-current="page">全部商品</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- 商品列表 -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <!-- 侧边栏筛选 -->
+                <div class="col-lg-3 mb-4 mb-lg-0">
+                    <!-- 分类筛选 -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0">商品分类</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <a href="products.html?category=electronics" class="text-decoration-none text-dark">电子产品</a>
+                                    <span class="badge bg-primary rounded-pill">120</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <a href="products.html?category=clothing" class="text-decoration-none text-dark">服装鞋包</a>
+                                    <span class="badge bg-primary rounded-pill">85</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <a href="products.html?category=home" class="text-decoration-none text-dark">家居生活</a>
+                                    <span class="badge bg-primary rounded-pill">65</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <a href="products.html?category=beauty" class="text-decoration-none text-dark">美妆个护</a>
+                                    <span class="badge bg-primary rounded-pill">42</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <a href="products.html?category=sports" class="text-decoration-none text-dark">运动户外</a>
+                                    <span class="badge bg-primary rounded-pill">38</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- 价格筛选 -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0">价格区间</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>¥<span id="priceMin">0</span></span>
+                                    <span>¥<span id="priceMax">5000</span></span>
+                                </div>
+                                <div class="range-slider">
+                                    <input type="range" class="form-range" min="0" max="5000" step="100" id="priceRange">
+                                </div>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col">
+                                    <input type="number" class="form-control" placeholder="最低价" min="0" id="minPrice">
+                                </div>
+                                <div class="col-auto">
+                                    <span class="form-text">-</span>
+                                </div>
+                                <div class="col">
+                                    <input type="number" class="form-control" placeholder="最高价" min="0" id="maxPrice">
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-primary">确定</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 品牌筛选 -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0">品牌</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="brand1">
+                                <label class="form-check-label" for="brand1">
+                                    苹果 (Apple)
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="brand2">
+                                <label class="form-check-label" for="brand2">
+                                    三星 (Samsung)
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="brand3">
+                                <label class="form-check-label" for="brand3">
+                                    华为 (Huawei)
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="brand4">
+                                <label class="form-check-label" for="brand4">
+                                    小米 (Xiaomi)
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="brand5">
+                                <label class="form-check-label" for="brand5">
+                                    索尼 (Sony)
+                                </label>
+                            </div>
+                            <div class="collapse" id="moreBrands">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="brand6">
+                                    <label class="form-check-label" for="brand6">
+                                        戴尔 (Dell)
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="brand7">
+                                    <label class="form-check-label" for="brand7">
+                                        联想 (Lenovo)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="brand8">
+                                    <label class="form-check-label" for="brand8">
+                                        惠普 (HP)
+                                    </label>
+                                </div>
+                            </div>
+                            <button class="btn btn-link p-0 mt-2" data-bs-toggle="collapse" data-bs-target="#moreBrands">
+                                <span class="more-text">显示更多</span>
+                                <span class="less-text d-none">收起</span>
+                                <i class="bi bi-chevron-down more-icon"></i>
+                                <i class="bi bi-chevron-up less-icon d-none"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 评分筛选 -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0">评分</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="rating" id="rating5" checked>
+                                <label class="form-check-label" for="rating5">
+                                    <div class="rating">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="rating" id="rating4">
+                                <label class="form-check-label" for="rating4">
+                                    <div class="rating">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star"></i>
+                                    </div>
+                                    <span class="text-muted">及以上</span>
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="rating" id="rating3">
+                                <label class="form-check-label" for="rating3">
+                                    <div class="rating">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star"></i>
+                                        <i class="bi bi-star"></i>
+                                    </div>
+                                    <span class="text-muted">及以上</span>
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="rating" id="rating2">
+                                <label class="form-check-label" for="rating2">
+                                    <div class="rating">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star"></i>
+                                        <i class="bi bi-star"></i>
+                                        <i class="bi bi-star"></i>
+                                    </div>
+                                    <span class="text-muted">及以上</span>
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="rating" id="ratingAll">
+                                <label class="form-check-label" for="ratingAll">
+                                    显示所有评分
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 其他筛选 -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0">其他筛选</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="inStock" checked>
+                                <label class="form-check-label" for="inStock">
+                                    仅显示有货商品
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="freeShipping">
+                                <label class="form-check-label" for="freeShipping">
+                                    免运费
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="onSale">
+                                <label class="form-check-label" for="onSale">
+                                    特价商品
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 清除筛选 -->
+                    <div class="d-grid">
+                        <button class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle"></i> 清除所有筛选
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 商品展示区 -->
+                <div class="col-lg-9">
+                    <!-- 排序和布局选项 -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <p class="mb-0">显示 <strong>1-12</strong> 件商品，共 <strong>350</strong> 件</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex justify-content-md-end">
+                                        <div class="me-3">
+                                            <select class="form-select">
+                                                <option selected>默认排序</option>
+                                                <option>价格从低到高</option>
+                                                <option>价格从高到低</option>
+                                                <option>评分从高到低</option>
+                                                <option>最新上架</option>
+                                                <option>销量从高到低</option>
+                                            </select>
+                                        </div>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-outline-primary active">
+                                                <i class="bi bi-grid-3x3-gap"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-primary">
+                                                <i class="bi bi-list"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品网格 -->
+                    <div class="row g-4">
+                        <!-- 商品1 -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100">
+                                <div class="position-relative">
+                                    <img src="https://via.placeholder.com/300x300/ff3e6c/ffffff?text=商品1" class="card-img-top" alt="高端智能手表">
+                                    <span class="badge bg-danger position-absolute top-0 start-0 m-2">新品</span>
+                                    <button class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0 m-2 rounded-circle">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">高端智能手表</h5>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="price">¥1299.00</span>
+                                        <div class="rating">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-half"></i>
+                                            <small class="ms-1">(120)</small>
+                                        </div>
+                                    </div>
+                                    <p class="card-text mt-2">多功能智能手表，支持心率监测、运动追踪、消息提醒等功能。</p>
+                                    <div class="d-grid gap-2">
+                                        <a href="product-detail.html?id=1" class="btn btn-outline-primary">查看详情</a>
+                                        <button class="btn btn-primary add-to-cart" 
+                                            data-product-id="1" 
+                                            data-product-name="高端智能手表" 
+                                            data-product-price="1299.00" 
+                                            data-product-image="https://via.placeholder.com/300x300/ff3e6c/ffffff?text=商品1">
+                                            <i class="bi bi-cart-plus"></i> 加入购物车
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 商品2 -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100">
+                                <div class="position-relative">
+                                    <img src="https://via.placeholder.com/300x300/0bc6a0/ffffff?text=商品2" class="card-img-top" alt="无线蓝牙耳机">
+                                    <span class="badge bg-warning position-absolute top-0 start-0 m-2">热销</span>
+                                    <button class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0 m-2 rounded-circle">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">无线蓝牙耳机</h5>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="price">¥499.00</span>
+                                        <div class="rating">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star"></i>
+                                            <small class="ms-1">(89)</small>
+                                        </div>
+                                    </div>
+                                    <p class="card-text mt-2">高音质无线蓝牙耳机，主动降噪，长续航，舒适佩戴。</p>
+                                    <div class="d-grid gap-2">
+                                        <a href="product-detail.html?id=2" class="btn btn-outline-primary">查看详情</a>
+                                        <button class="btn btn-primary add-to-cart" 
+                                            data-product-id="2" 
+                                            data-product-name="无线蓝牙耳机" 
+                                            data-product-price="499.00" 
+                                            data-product-image="https://via.placeholder.com/300x300/0bc6a0/ffffff?text=商品2">
+                                            <i class="bi bi-cart-plus"></i> 加入购物车
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 商品3 -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100">
+                                <div class="position-relative">
+                                    <img src="https://via.placeholder.com/300x300/ffc107/ffffff?text=商品3" class="card-img-top" alt="时尚连衣裙">
+                                    <span class="badge bg-success position-absolute top-0 start-0 m-2">特价</span>
+                                    <button class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0 m-2 rounded-circle">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">时尚连衣裙</h5>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="price">¥199.00</span>
+                                            <span class="text-decoration-line-through text-muted ms-2">¥399.00</span>
+                                        </div>
+                                        <div class="rating">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-half"></i>
+                                            <i class="bi bi-star"></i>
+                                            <small class="ms-1">(56)</small>
+                                        </div>
+                                    </div>
+                                    <p class="card-text mt-2">夏季新款时尚连衣裙，舒适面料，修身设计，多色可选。</p>
+                                    <div class="d-grid gap-2">
+                                        <a href="product-detail.html?id=3" class="btn btn-outline-primary">查看详情</a>
+                                        <button class="btn btn-primary add-to-cart" 
+                                            data-product-id="3" 
+                                            data-product-name="时尚连衣裙" 
+                                            data-product-price="199.00" 
+                                            data-product-image="https://via.placeholder.com/300x300/ffc107/ffffff?text=商品3">
+                                            <i class="bi bi-cart-plus"></i> 加入购物车
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 商品4 -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100">
+                                <div class="position-relative">
+                                    <img src="https://via.placeholder.com/300x300/17a2b8/ffffff?text=商品4" class="card-img-top" alt="智能空气净化器">
+                                    <span class="badge bg-danger position-absolute top-0 start-0 m-2">新品</span>
+                                    <span class="badge bg-success position-absolute top-0 end-0 m-2">特价</span>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">智能空气净化器</h5>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="price">¥899.00</span>
+                                            <span class="text-decoration-line-through text-muted ms-2">¥1299.00</span>
+                                        </div>
+                                        <div class="rating">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <small class="ms-1">(32)</small>
+                                        </div>
+                                    </div>
+                                    <p class="card-text mt-2">智能空气净化器，高效过滤PM2.5，除甲醛，智能控制，静音设计。</p>
+                                    <div class="d-grid gap-2">
+                                        <a href="product-detail.html?id=4" class="btn btn-outline-primary">查看详情</a>
+                                        <button class="btn btn-primary add-to-cart" 
+                                            data-product-id="4" 
+                                            data-product-name="智能空气净化器" 
+                                            data-product-price="899.00" 
+                                            data-product-image="https://via.placeholder.com/300x300/17a2b8/ffffff?text=商品4">
+                                            <i class="bi bi-cart-plus"></i> 加入购物车
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 商品5 -->
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100">
+                                <div class="position-relative">
+                                    <img src="https://via.placeholder.com/300x300/dc3545/
+                                    <div class="rating">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star"></i>
+                                        <small class="ms-1">(15)</small>
+                                    </div>
+                                </div>
+                                <p class="card-text mt-2">智能扫地机器人，自动规划路径，大吸力，超长续航。</p>
+                                <div class="d-grid gap-2">
+                                    <a href="product-detail.html?id=8" class="btn btn-outline-primary">查看详情</a>
+                                    <button class="btn btn-primary add-to-cart" 
+                                        data-product-id="8" 
+                                        data-product-name="智能扫地机器人" 
+                                        data-product-price="1899.00" 
+                                        data-product-image="https://via.placeholder.com/300x300/fd7e14/ffffff?text=新品4">
+                                        <i class="bi bi-cart-plus"></i> 加入购物车
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+          <!-- 页脚 -->
+    <footer class="py-5 bg-dark text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5>多彩商城</h5>
+                    <p class="mb-0">您的一站式在线购物平台</p>
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5>联系我们</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-telephone me-2"></i> 400-123-4567</li>
+                        <li><i class="bi bi-envelope me-2"></i> service@duocai.com</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>关注我们</h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white"><i class="bi bi-wechat fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-weibo fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-tiktok fs-4"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2024 多彩商城 版权所有</p>
+            </div>
+        </div>
+    </footer> <!-- JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/script.js"></script>
+    <script>
+        // 初始化轮播图
+        document.addEventListener('DOMContentLoaded', function() {
+            // 购物车数量更新
+            updateCartCount();
+            
+            // 轮播图自动播放
+            const carousel = new bootstrap.Carousel('#mainCarousel', {
+                interval: 5000
+            });
+        });
+    </script>
+</body>
+</html>

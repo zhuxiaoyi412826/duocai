@@ -1,0 +1,75 @@
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">多彩商城</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">首页</a>
+                </li>
+                
+                <!-- 商品分类 -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="category.html" id="navbarDropdown">
+                        商品分类
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="category.html">全部分类</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="products-local.html?category=electronics">电子产品</a></li>
+                        <li><a class="dropdown-item" href="products-local.html?category=clothing">服装鞋包</a></li>
+                        <li><a class="dropdown-item" href="products-local.html?category=home">家居生活</a></li>
+                        <li><a class="dropdown-item" href="products-local.html?category=beauty">美妆个护</a></li>
+                        <li><a class="dropdown-item" href="products-local.html?category=sports">运动户外</a></li>
+                    </ul>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="products-local.html?tag=new">新品上市</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="products-local.html?tag=sale">特价促销</a>
+                </li>
+            </ul>
+            
+            <form class="d-flex me-3">
+                <div class="input-group">
+                    <input class="form-control" type="search" placeholder="搜索商品...">
+                    <button class="btn btn-light" type="submit"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+            
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="cart.html">
+                        <i class="bi bi-cart3"></i> 购物车
+                        <span class="badge bg-danger rounded-pill cart-count">0</span>
+                    </a>
+                </li>
+                
+                <!-- 地址管理 -->
+                <li class="nav-item">
+                    <a class="nav-link" href="address.html">
+                        <i class="bi bi-geo-alt"></i> 地址管理
+                    </a>
+                </li>
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown">
+                        <i class="bi bi-person-circle"></i> 我的账户
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="login.html">登录</a></li>
+                        <li><a class="dropdown-item" href="register.html">注册</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="user-profile.html">个人中心</a></li>
+                        <li><a class="dropdown-item" href="user-profile.html?tab=orders">我的订单</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

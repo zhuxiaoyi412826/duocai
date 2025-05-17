@@ -1,0 +1,26 @@
+“Invalid value type for attribute 'factoryBeanObjectType': java.lang.String”
+
+
+用启动开始...
+
+========== Spring配置检查 ==========
+
+04:21:10.241 [main] INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate -- Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+
+04:21:10.286 [main] INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate -- Finished Spring Data repository scanning in 32 ms. Found 0 JPA repository interfaces.
+
+04:21:10.482 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: java.lang.IllegalArgumentException: Invalid value type for attribute 'factoryBeanObjectType': java.lang.String
+
+Spring上下文刷新失败                                                              22025-05-17T04:21:12.405+08:00  WARN 20012 --- [duocai-mall] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: java.lang.IllegalArgumentException: Invalid value type for attribute 'factoryBeanObjectType': java.lang.String
+
+2025-05-17T04:21:13.148+08:00  INFO 20012 --- [duocai-mall] [main] .s.b.a.l.ConditionEvaluationReportLogger :
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+
+2025-05-17T04:21:13.239+08:00 ERROR 20012 --- [duocai-mall] [main] o.s.boot.SpringApplication               : Application run failed
+
+java.lang.IllegalArgumentException: Invalid value type for attribute 'factoryBeanObjectType': java.lang.String
+
+at org.springframework.beans.factory.support.FactoryBeanRegistrySupport.getTypeForFactoryBeanFromAttributes(FactoryBeanRegistrySupport.java:86) ~[spring-beans-6.1.1.jar:6.1.1]
+
+at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.getTypeForFactoryBean(AbstractAutowireCapableBeanFactory.java:838) ~[spring-beans-6.1.1.jar:6.1.1]

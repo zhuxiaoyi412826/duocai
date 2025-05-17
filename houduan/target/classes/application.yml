@@ -1,0 +1,46 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: duocai-mall
+  
+  # 数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/duocai?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: zxy
+    password: 412826
+
+  # Jackson配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      write-dates-as-timestamps: false
+
+# MyBatis配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.duocai.mall.model
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# JWT配置
+jwt:
+  secret: duocai-mall-secret-key
+  expiration: 86400000  # 24小时
+
+# 文件上传配置
+file:
+  upload:
+    path: D:/duocai-mall/upload/
+    allowed-types: image/jpeg,image/png,image/gif
+    max-size: 5MB
+    
+logging:
+  level:
+    org.springframework.beans.factory: DEBUG
+    org.mybatis.spring: DEBUG
+    com.duocai.mall.mapper: DEBUG

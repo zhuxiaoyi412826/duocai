@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品分类 - 多彩商城</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .category-sidebar {
+            border-right: 1px solid #eee;
+            height: 100%;
+            position: sticky;
+            top: 70px;
+        }
+        .category-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .category-item:hover {
+            background-color: #f8f9fa;
+            border-left-color: var(--primary-color);
+        }
+        .category-item .bi {
+            transition: transform 0.2s;
+        }
+        .subcategory {
+            padding-left: 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .category-item.active > .subcategory {
+            max-height: 500px;
+        }
+        .category-item.active > .bi-chevron-right {
+            transform: rotate(90deg);
+        }
+        .subcategory .category-item {
+            padding: 8px 10px;
+            font-size: 0.9rem;
+        }
+        #productGrid {
+            min-height: 500px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        [...保留原有导航代码...]
+    </nav>
+
+    <div class="container-fluid py-4">
+        <div class="row">
+            <!-- 左侧分类导航 -->
+            <div class="col-lg-3 col-md-4 category-sidebar">
+                <h5 class="px-3 mb-3"><i class="bi bi-list-ul me-2"></i>商品分类</h5>
+                <div id="categoryTree">
+                    <!-- 电子产品 -->
+                    <div class="category-item active" data-category="electronics">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-phone me-2"></i>电子产品</span>
+                            <i class="bi bi-chevron-right"></i>
+                        </div>
+                        <div class="subcategory mt-1">
+                            <div class="category-item" data-category="phone">
+                                <i class="bi bi-phone me-2"></i>手机通讯
+                            </div>
+                            <div class="category-item" data-category="computer">
+                                <i class="bi bi-pc me-2"></i>电脑办公
+                            </div>
+                            <div class="category-item" data-category="wearable">
+                                <i class="bi bi-smartwatch me-2"></i>智能穿戴
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 服装鞋包 -->
+                    <div class="category-item" data-category="clothing">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-bag me-2"></i>服装鞋包</span>
+                            <i class="bi bi-chevron-right"></i>
+                        </div>
+                        <div class="subcategory mt-1">
+                            <div class="category-item" data-category="men">
+                                <i class="bi bi-person me-2"></i>男装
+                            </div>
+                            <div class="category-item" data-category="women">
+                                <i class="bi bi-person-fill me-2"></i>女装
+                            </div>
+                            <div class="category-item" data-category="shoes">
+                                <i class="bi bi-boot me-2"></i>鞋靴箱包
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 家居生活 -->
+                    <div class="category-item" data-category="home">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-house me-2"></i>家居生活</span>
+                            <i class="bi bi-chevron-right"></i>
+                        </div>
+                        <div class="subcategory mt-1">
+                            <div class="category-item" data-category="furniture">
+                                <i class="bi bi-couch me-2"></i>家装家具
+                            </div>
+                            <div class="category-item" data-category="kitchen">
+                                <i class="bi bi-egg-fried me-2"></i>厨房用品
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧商品展示 -->
+            <div class="col-lg-9 col-md-8">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 id="currentCategory">
+                        <i class="bi bi-phone me-2"></i>
+                        <span>电子产品</span>
+                        <small class="text-muted ms-2">共12件商品</small>
+                    </h4>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-secondary btn-sm">综合</button>
+                        <button class="btn btn-outline-secondary btn-sm">销量</button>
+                        <button class="btn btn-outline-secondary btn-sm">价格 <i class="bi bi-arrow-down-up"></i></button>
+                    </div>
+                </div>
+
+                <!-- 商品网格 -->
+                <div class="row g-4" id="productGrid">
+                    <!-- 商品将通过JS动态加载 -->
+                </div>
+                
+                <!-- 分页 -->
+                <nav class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">上一页</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">下一页</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/script.js"></script>
+</body>
+</html>

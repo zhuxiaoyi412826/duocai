@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品分类 - 多彩商城</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- 导航栏（与index.html相同） -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        [...保留原有导航代码...]
+    </nav>
+
+    <div class="container py-5">
+        <h1 class="mb-4">商品分类</h1>
+        
+        <div class="row g-4">
+            <!-- 电子产品 -->
+            <div class="col-md-4">
+                <div class="card h-100 category-card">
+                    <img src="assets/images/product1.svg" class="card-img-top" alt="电子产品">
+                    <div class="card-body text-center">
+                        <h3>电子产品</h3>
+                        <a href="products-local.html?category=electronics" 
+                           class="btn btn-primary mt-3">
+                           浏览商品
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 服装鞋包 -->
+            <div class="col-md-4">
+                <div class="card h-100 category-card">
+                    <img src="assets/images/product2.svg" class="card-img-top" alt="服装鞋包">
+                    <div class="card-body text-center">
+                        <h3>服装鞋包</h3>
+                        <a href="products-local.html?category=clothing" 
+                           class="btn btn-primary mt-3">
+                           浏览商品
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 家居生活 -->
+            <div class="col-md-4">
+                <div class="card h-100 category-card">
+                    <img src="assets/images/product3.svg" class="card-img-top" alt="家居生活">
+                    <div class="card-body text-center">
+                        <h3>家居生活</h3>
+                        <a href="products-local.html?category=home" 
+                           class="btn btn-primary mt-3">
+                           浏览商品
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚（与index.html相同） -->
+    <footer class="py-5 bg-dark text-white">
+        [...保留原有页脚代码...]
+    </footer>
+
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/script.js"></script>
+</body>
+</html>

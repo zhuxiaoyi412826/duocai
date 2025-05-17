@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.duocai.mall.mapper.CartMapper">
+    
+    <!-- 更新购物车项的选中状态 -->
+    <update id="updateSelectedStatus">
+        UPDATE cart_items
+        SET selected = #{selected}
+        WHERE id = #{id}
+          AND user_id = #{userId}
+    </update>
+    
+    <!-- 根据ID列表查询购物车项 -->
+    <select id="selectByIds" resultType="com.duocai.mall.model.CartItem">
+        SELECT * FROM cart_items
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    
+    <!-- 查询选中的购物车项 -->
+    <select id="selectSelectedItems" resultType="com.duocai.mall.model.CartItem">
+        SELECT * FROM cart_items
+        WHERE user_id = #{userId}
+          AND selected = 1
+    </select>
+</mapper>
