@@ -1,0 +1,48 @@
+/* style.css 秒杀活动原型主样式 */
+body { font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif; background: #fff; margin: 0; color: #222; }
+.miaosha-header { background: linear-gradient(90deg, #ff4d4f 60%, #ffec3d 100%); padding: 32px 0 16px 0; text-align: center; position: relative; }
+.activity-title { display: flex; flex-direction: column; align-items: center; }
+.main-title { font-size: 2.6rem; font-weight: bold; color: #fff; letter-spacing: 2px; margin-bottom: 8px; }
+.countdown { font-size: 1.5rem; font-weight: bold; color: #ff4d4f; background: #ffec3d; padding: 6px 18px; border-radius: 24px; margin-bottom: 8px; display: inline-block; }
+.activity-status { font-size: 1.1rem; color: #fff; margin-top: 8px; }
+.product-section { padding: 24px 0 0 0; background: #fff; }
+.product-tabs { display: flex; justify-content: center; gap: 24px; margin-bottom: 18px; }
+.tab { background: #fffbe6; border: 2px solid #ffec3d; color: #ff4d4f; font-weight: bold; font-size: 1.1rem; border-radius: 18px 18px 0 0; padding: 8px 32px; cursor: pointer; transition: background 0.2s; }
+.tab.active { background: #ffec3d; color: #d4380d; border-bottom: 2px solid #fff; }
+.product-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 32px; }
+.product-card { background: #fff; border-radius: 16px; box-shadow: 0 2px 12px rgba(255,77,79,0.08); width: 320px; padding: 18px; display: flex; flex-direction: column; align-items: center; position: relative; }
+.product-card .sticker { position: absolute; top: 12px; left: 12px; background: #ff4d4f; color: #fff; font-size: 0.95rem; border-radius: 8px; padding: 2px 10px; }
+.product-img { width: 180px; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 12px; }
+.product-name { font-size: 1.2rem; font-weight: 500; margin-bottom: 8px; text-align: center; }
+.price-info { margin-bottom: 8px; }
+.old-price { text-decoration: line-through; color: #999; font-size: 1rem; margin-right: 8px; }
+.promo-price { color: #ff4d4f; font-size: 1.5rem; font-weight: bold; margin-right: 8px; }
+.save-amount { color: #faad14; font-size: 1rem; }
+.stock-bar { width: 90%; height: 12px; background: #ffe7ba; border-radius: 8px; margin: 10px 0; position: relative; }
+.stock-bar-inner { height: 100%; background: #ff4d4f; border-radius: 8px; transition: width 0.5s; }
+.stock-text { font-size: 0.95rem; color: #d4380d; margin-bottom: 8px; }
+.action-btn { width: 90%; padding: 10px 0; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; margin-top: 10px; cursor: pointer; transition: background 0.2s, transform 0.2s; }
+.action-btn.prebuy { background: #fffbe6; color: #faad14; border: 1px solid #faad14; }
+.action-btn.buying { background: #ffec3d; color: #d4380d; animation: breathing 1.2s infinite alternate; }
+.action-btn.soldout { background: #eee; color: #aaa; cursor: not-allowed; }
+@keyframes breathing { 0% { transform: scale(1); } 100% { transform: scale(1.06); } }
+.user-actions { position: fixed; top: 80px; right: 32px; display: flex; flex-direction: column; gap: 18px; z-index: 10; }
+.login-btn, .coupon-btn, .share-btn { background: #ffec3d; color: #d4380d; border: none; border-radius: 8px; padding: 10px 18px; font-size: 1rem; font-weight: bold; cursor: pointer; box-shadow: 0 2px 8px rgba(255,236,61,0.08); transition: background 0.2s; }
+.login-btn:hover, .coupon-btn:hover, .share-btn:hover { background: #ffe58f; }
+.address-info { background: #fffbe6; color: #faad14; border-radius: 8px; padding: 8px 14px; font-size: 0.98rem; }
+.edit-address { color: #ff4d4f; text-decoration: underline; margin-left: 8px; }
+.modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.25); justify-content: center; align-items: center; }
+.modal-content { background: #fff; border-radius: 14px; padding: 32px 48px; text-align: center; position: relative; }
+.close { position: absolute; top: 12px; right: 18px; font-size: 2rem; color: #aaa; cursor: pointer; }
+.get-coupon { background: #ff4d4f; color: #fff; border: none; border-radius: 8px; padding: 10px 32px; font-size: 1.1rem; font-weight: bold; margin-top: 18px; cursor: pointer; }
+.floating-notice { position: fixed; left: 50%; transform: translateX(-50%); top: 12px; background: #fffbe6; color: #d4380d; border-radius: 8px; padding: 8px 32px; font-size: 1rem; box-shadow: 0 2px 8px rgba(255,236,61,0.08); z-index: 99; animation: floatIn 0.5s; }
+@keyframes floatIn { from { opacity: 0; top: 0; } to { opacity: 1; top: 12px; } }
+.miaosha-footer { background: #fffbe6; padding: 18px 0 32px 0; text-align: center; position: relative; margin-top: 48px; }
+.rules-link { color: #faad14; font-size: 0.98rem; text-decoration: underline; cursor: pointer; }
+.rules-content { display: none; background: #fff; border-radius: 8px; padding: 12px 24px; margin: 10px auto; width: 320px; font-size: 0.98rem; color: #666; text-align: left; }
+.rules-content.active { display: block; }
+.service-btn { position: fixed; bottom: 32px; right: 32px; background: #ffec3d; color: #d4380d; border: none; border-radius: 50%; width: 56px; height: 56px; font-size: 1.2rem; font-weight: bold; box-shadow: 0 2px 8px rgba(255,236,61,0.18); cursor: pointer; z-index: 20; }
+.recommend { margin-top: 18px; font-size: 1rem; color: #d4380d; }
+.guess-list { color: #faad14; margin-left: 8px; }
+.next-session { margin-top: 10px; font-size: 0.98rem; color: #999; }
+@media (max-width: 600px) { .product-list { flex-direction: column; align-items: center; } .product-card { width: 96vw; } .modal-content { padding: 18px 8px; } .user-actions { right: 8px; top: 60px; } .miaosha-header { padding: 18px 0 8px 0; } }

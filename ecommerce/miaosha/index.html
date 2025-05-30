@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>双11限时秒杀活动原型</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 头部导航区 -->
+    <header class="miaosha-header">
+        <div class="activity-title">
+            <span class="main-title">双11限时秒杀</span>
+            <span class="countdown" id="countdown"></span>
+        </div>
+        <div class="activity-status" id="activityStatus"></div>
+    </header>
+    <!-- 商品展示区 -->
+    <section class="product-section">
+        <div class="product-tabs">
+            <button class="tab active" data-tab="digital">10:00 数码专场</button>
+            <button class="tab" data-tab="beauty">15:00 美妆专场</button>
+        </div>
+        <div class="product-list" id="productList"></div>
+    </section>
+    <!-- 用户操作区 -->
+    <aside class="user-actions">
+        <button class="login-btn">快速登录</button>
+        <div class="address-info">默认收货地址：北京市朝阳区 <a href="#" class="edit-address">修改</a></div>
+        <button class="coupon-btn" id="couponBtn">领券</button>
+        <button class="share-btn">分享好友得机会</button>
+    </aside>
+    <!-- 优惠券弹窗 -->
+    <div class="modal" id="couponModal">
+        <div class="modal-content">
+            <span class="close" id="closeCoupon">&times;</span>
+            <h3>满1000减100优惠券</h3>
+            <button class="get-coupon">立即领取</button>
+        </div>
+    </div>
+    <!-- 氛围营造元素 -->
+    <div class="floating-notice" id="floatingNotice"></div>
+    <!-- 底部信息栏 -->
+    <footer class="miaosha-footer">
+        <a href="#" class="rules-link" id="rulesLink">活动规则</a>
+        <div class="rules-content" id="rulesContent">
+            <ul>
+                <li>每人限购1件</li>
+                <li>订单需在30分钟内支付</li>
+                <li>秒杀商品不支持7天无理由</li>
+            </ul>
+        </div>
+        <button class="service-btn">在线客服</button>
+        <div class="recommend">
+            <span>猜你喜欢：</span>
+            <span class="guess-list" id="guessList"></span>
+        </div>
+        <div class="next-session">
+            <span>即将开始：</span>
+            <span id="nextSession"></span>
+        </div>
+    </footer>
+    <script src="main.js"></script>
+</body>
+</html>
