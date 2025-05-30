@@ -24,3 +24,34 @@ java.lang.IllegalArgumentException: Invalid value type for attribute 'factoryBea
 at org.springframework.beans.factory.support.FactoryBeanRegistrySupport.getTypeForFactoryBeanFromAttributes(FactoryBeanRegistrySupport.java:86) ~[spring-beans-6.1.1.jar:6.1.1]
 
 at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.getTypeForFactoryBean(AbstractAutowireCapableBeanFactory.java:838) ~[spring-beans-6.1.1.jar:6.1.1]
+
+完成如下功能                                                                                         1. 创建WebMvcConfig配置类
+1. 注册认证拦截器
+配置跨域请求处理
+设置资源映射
+2. 实现Redis配置类
+
+配置RedisTemplate
+设置序列化器
+配置连接池参数
+3. 创建请求和响应VO类
+
+完善LoginRequest和RegisterRequest类
+实现LoginResponse类
+4. 添加全局异常处理器
+
+统一处理认证异常
+返回标准化的错误响应
+5. 实现用户服务
+
+创建UserService接口和实现类
+提供用户信息管理功能
+6. 添加数据库初始化脚本
+
+创建用户表结构
+添加初始测试数据
+7. 编写单元测试
+
+测试认证服务的各项功能
+验证JWT工具类的正确性       
+8 完善 Controller类                                                                      8 controller类完善

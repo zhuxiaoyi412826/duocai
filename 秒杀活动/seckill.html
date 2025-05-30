@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多彩商城 - 限时秒杀</title>
+    <link rel="stylesheet" href="css/seckill.css">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="/" class="nav-logo">
+                    <img src="images/logo.png" alt="多彩商城">
+                </a>
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="打开菜单" aria-expanded="false" aria-controls="navMenu">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <ul class="nav-menu" id="navMenu" role="menu" aria-labelledby="mobileMenuBtn">
+                    <div class="nav-loading" aria-hidden="true"></div>
+                    <li><a href="/">首页</a></li>
+                    <li><a href="/categories" class="active">全部分类</a></li>
+                    <li><a href="/new">新品上市</a></li>
+                    <li><a href="/brands">品牌专区</a></li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <div class="search-box">
+                    <input type="text" placeholder="搜索商品">
+                    <button class="search-btn">搜索</button>
+                </div>
+                <div class="nav-user">
+                    <a href="/cart" class="cart-link">
+                        <i class="cart-icon"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                    <a href="/user" class="user-link">
+                        <i class="user-icon"></i>
+                        <span>我的账户</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 头部导航区 -->
+    <header class="seckill-header">
+        <div class="activity-title">
+            <h1>双11限时秒杀</h1>
+            <div class="subtitle">爆款直降80%</div>
+        </div>
+        <div class="countdown-container">
+            <div class="countdown-title">距离活动结束还剩</div>
+            <div class="countdown-timer">
+                <span class="hours">00</span>
+                <span class="colon">:</span>
+                <span class="minutes">00</span>
+                <span class="colon">:</span>
+                <span class="seconds">00</span>
+            </div>
+        </div>
+        <div class="activity-status">
+            <span class="status-text">距开始还有</span>
+            <button class="remind-btn">提醒我</button>
+        </div>
+    </header>
+
+    <!-- 商品展示区 -->
+    <section class="products-container">
+        <div class="session-tabs">
+            <div class="tab active">10:00 数码专场</div>
+            <div class="tab">15:00 美妆专场</div>
+            <div class="tab">20:00 服饰专场</div>
+        </div>
+        
+        <div class="product-list">
+            <!-- 数码专场商品 -->
+            <div class="product-card">
+                <div class="product-badge">限量100件</div>
+                <img src="images/iphone15pro.jpg" alt="iPhone 15 Pro" class="product-image">
+                <h3 class="product-name">iPhone 15 Pro 256G 星光色</h3>
+                <div class="price-info">
+                    <div class="current-price">¥8999</div>
+                    <div class="original-price">¥12999</div>
+                    <div class="save-price">立省4000元</div>
+                </div>
+                <div class="stock-progress">
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 82%"></div>
+                    </div>
+                    <span class="progress-text">已抢82%</span>
+                </div>
+                <button class="buy-button">立即抢购</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-badge">限量50件</div>
+                <img src="images/macbook.jpg" alt="MacBook Pro" class="product-image">
+                <h3 class="product-name">MacBook Pro 14" M3芯片 16G+512G</h3>
+                <div class="price-info">
+                    <div class="current-price">¥12999</div>
+                    <div class="original-price">¥14999</div>
+                    <div class="save-price">立省2000元</div>
+                </div>
+                <div class="stock-progress">
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 65%"></div>
+                    </div>
+                    <span class="progress-text">已抢65%</span>
+                </div>
+                <button class="buy-button">立即抢购</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-badge">限量200件</div>
+                <img src="images/airpods.jpg" alt="AirPods Pro" class="product-image">
+                <h3 class="product-name">AirPods Pro 第二代 降噪耳机</h3>
+                <div class="price-info">
+                    <div class="current-price">¥1499</div>
+                    <div class="original-price">¥1999</div>
+                    <div class="save-price">立省500元</div>
+                </div>
+                <div class="stock-progress">
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 45%"></div>
+                    </div>
+                    <span class="progress-text">已抢45%</span>
+                </div>
+                <button class="buy-button">立即抢购</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-badge">限量150件</div>
+                <img src="images/ipad.jpg" alt="iPad Air" class="product-image">
+                <h3 class="product-name">iPad Air 5 256G WIFI版</h3>
+                <div class="price-info">
+                    <div class="current-price">¥4599</div>
+                    <div class="original-price">¥5799</div>
+                    <div class="save-price">立省1200元</div>
+                </div>
+                <div class="stock-progress">
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 55%"></div>
+                    </div>
+                    <span class="progress-text">已抢55%</span>
+                </div>
+                <button class="buy-button">立即抢购</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 用户操作区 -->
+    <section class="user-operation">
+        <div class="quick-login">
+            <button class="login-btn">快速登录</button>
+        </div>
+        <div class="address-management">
+            <div class="default-address">
+                默认地址：北京市朝阳区xxx街道
+                <a href="#" class="edit-address">修改</a>
+            </div>
+        </div>
+        <div class="promotion-tools">
+            <button class="coupon-btn">领取优惠券</button>
+            <button class="share-btn">分享给好友</button>
+        </div>
+    </section>
+
+    <!-- 氛围营造元素 -->
+    <section class="atmosphere">
+        <div class="purchase-notification">
+            <div class="notification-content">
+                张** 刚刚抢购了iPhone 15 Pro
+            </div>
+        </div>
+        <div class="trust-badges">
+            <div class="badge">
+                <img src="images/genuine.png" alt="正品保障" class="badge-icon">
+                <span>正品保障</span>
+            </div>
+            <div class="badge">
+                <img src="images/guarantee.png" alt="假一赔十" class="badge-icon">
+                <span>假一赔十</span>
+            </div>
+            <div class="badge">
+                <img src="images/shipping.png" alt="极速发货" class="badge-icon">
+                <span>极速发货</span>
+            </div>
+            <div class="badge">
+                <img src="images/service.png" alt="7×24小时服务" class="badge-icon">
+                <span>7×24小时服务</span>
+            </div>
+            <div class="badge">
+                <img src="images/secure.png" alt="安全支付" class="badge-icon">
+                <span>安全支付</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 用户反馈区域 -->
+    <section class="user-feedback">
+        <h3>用户反馈</h3>
+        <div class="feedback-stats">
+            <div class="stat-item">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">好评率</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">10000+</div>
+                <div class="stat-label">成功订单</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">30分钟</div>
+                <div class="stat-label">平均发货时间</div>
+            </div>
+        </div>
+        <div class="user-comments">
+            <div class="comment">
+                <div class="user-avatar">
+                    <img src="images/avatar1.jpg" alt="用户头像">
+                </div>
+                <div class="comment-content">
+                    <div class="user-name">李**</div>
+                    <div class="comment-text">商品质量非常好，比预期的还要好，而且价格真的很划算！</div>
+                    <div class="comment-time">2023-11-10</div>
+                </div>
+            </div>
+            <div class="comment">
+                <div class="user-avatar">
+                    <img src="images/avatar2.jpg" alt="用户头像">
+                </div>
+                <div class="comment-content">
+                    <div class="user-name">王**</div>
+                    <div class="comment-text">发货速度超快，当天下单第二天就收到了，服务态度也很好！</div>
+                    <div class="comment-time">2023-11-09</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部信息栏 -->
+    <footer class="seckill-footer">
+        <div class="rules-container">
+            <h3 class="rules-title">活动规则</h3>
+            <div class="rules-content">
+                <p>1. <strong>活动时间：</strong>2023年11月11日 00:00:00 至 2023年11月12日 23:59:59</p>
+                <p>2. <strong>参与资格：</strong>所有注册用户均可参与，新用户注册后即可参与</p>
+                <p>3. <strong>购买限制：</strong>每个用户（同一账号、同一收货地址、同一收货人、同一支付账户视为同一用户）每个商品限购1件</p>
+                <p>4. <strong>支付规则：</strong>秒杀成功后请在30分钟内完成支付，否则订单将自动取消</p>
+                <p>5. <strong>发货说明：</strong>秒杀商品将在72小时内发货，节假日顺延</p>
+                <p>6. <strong>售后政策：</strong>秒杀商品不支持7天无理由退换货（国家法律法规规定的情况除外）</p>
+                <p>7. <strong>优惠规则：</strong>秒杀价格不与其他优惠同享，秒杀商品可使用秒杀专享优惠券</p>
+                <p>8. <strong>特别说明：</strong>活动期间如遇不可抗力因素，本公司有权调整或取消活动</p>
+            </div>
+        </div>
+        <div class="customer-service">
+            <h3>客户服务</h3>
+            <div class="service-options">
+                <button class="service-btn">在线客服</button>
+                <button class="service-btn">电话咨询</button>
+                <button class="service-btn">常见问题</button>
+            </div>
+            <div class="service-time">
+                <p>服务时间：9:00-22:00</p>
+                <p>客服热线：400-123-4567</p>
+            </div>
+        </div>
+        <div class="recommendations">
+            <h3>猜你喜欢</h3>
+            <div class="recommendation-list">
+                <!-- 推荐商品将通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </footer>
+
+    <!-- 弹窗组件 -->
+    <div class="modal coupon-modal" style="display: none;">
+        <div class="modal-content">
+            <h3>双11秒杀专享优惠券</h3>
+            <div class="coupon-list">
+                <div class="coupon">
+                    <div class="coupon-amount">¥100</div>
+                    <div class="coupon-condition">满1000可用</div>
+                    <div class="coupon-validity">有效期：11.11-11.12</div>
+                    <button class="get-coupon-btn">立即领取</button>
+                </div>
+                <div class="coupon premium">
+                    <div class="coupon-amount">¥500</div>
+                    <div class="coupon-condition">满3000可用</div>
+                    <div class="coupon-validity">有效期：11.11-11.12</div>
+                    <button class="get-coupon-btn">立即领取</button>
+                </div>
+                <div class="coupon special">
+                    <div class="coupon-amount">¥1000</div>
+                    <div class="coupon-condition">满8000可用</div>
+                    <div class="coupon-validity">有效期：11.11-11.12</div>
+                    <div class="coupon-tag">限量发放</div>
+                    <button class="get-coupon-btn">立即领取</button>
+                </div>
+            </div>
+            <div class="coupon-tips">
+                <p>* 每个用户限领一次</p>
+                <p>* 优惠券仅限秒杀商品使用</p>
+                <p>* 部分商品不可使用优惠券，请以商品页面说明为准</p>
+            </div>
+            <button class="close-modal">×</button>
+        </div>
+    </div>
+
+    <!-- 新增分享弹窗 -->
+    <div class="modal share-modal" style="display: none;">
+        <div class="modal-content">
+            <h3>分享活动</h3>
+            <div class="share-options">
+                <div class="share-option">
+                    <img src="images/wechat.png" alt="微信" class="share-icon">
+                    <span>微信</span>
+                </div>
+                <div class="share-option">
+                    <img src="images/moments.png" alt="朋友圈" class="share-icon">
+                    <span>朋友圈</span>
+                </div>
+                <div class="share-option">
+                    <img src="images/weibo.png" alt="微博" class="share-icon">
+                    <span>微博</span>
+                </div>
+                <div class="share-option">
+                    <img src="images/qq.png" alt="QQ" class="share-icon">
+                    <span>QQ</span>
+                </div>
+            </div>
+            <div class="share-rewards">
+                <h4>分享奖励</h4>
+                <p>成功邀请好友参与秒杀，即可获得50元无门槛优惠券！</p>
+            </div>
+            <button class="close-modal">×</button>
+        </div>
+    </div>
+
+    <script src="js/seckill.js"></script>
+</body>
+</html>

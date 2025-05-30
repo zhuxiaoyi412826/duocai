@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店铺管理 - 多彩电商</title>
+    <!-- 引入Bootstrap CSS -->
+    <link href="bootstrap5.13/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        /* 自定义样式 */
+        .sidebar {
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+        
+        .sidebar-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #e9ecef;
+        }
+        
+        .sidebar-link.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        
+        .content {
+            padding: 1.5rem;
+        }
+        
+        .card-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .drag-module {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            cursor: move;
+            transition: all 0.2s;
+        }
+        
+        .drag-module:hover {
+            background-color: #e9ecef;
+            border-color: #0d6efd;
+        }
+        
+        .preview-module {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: white;
+            border: 1px dashed #ced4da;
+            border-radius: 0.25rem;
+            position: relative;
+            transition: all 0.2s;
+        }
+        
+        .preview-module:hover {
+            border-color: #0d6efd;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.075);
+        }
+        
+        .preview-module .module-actions {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .preview-module:hover .module-actions {
+            opacity: 1;
+        }
+        
+        .shop-preview {
+            min-height: 500px;
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+            border-bottom: 2px solid #0d6efd;
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏导航 -->
+            <div class="col-md-3 col-lg-2 sidebar d-none d-md-block">
+                <div class="p-4">
+                    <h5 class="fw-bold text-primary">多彩电商</h5>
+                    <hr>
+                    <nav>
+                        <a href="#" class="sidebar-link"><i class="fa fa-tachometer mr-2"></i> 控制台</a>
+                        <a href="#" class="sidebar-link active"><i class="fa fa-store mr-2"></i> 店铺管理</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-cubes mr-2"></i> 商品管理</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-shopping-cart mr-2"></i> 订单管理</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-users mr-2"></i> 客户管理</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-bar-chart mr-2"></i> 数据分析</a>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- 主内容区域 -->
+            <div class="col-md-9 col-lg-10 content">
+                <!-- 顶部导航栏 -->
+                <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow-sm mb-4">
+                    <div class="container-fluid">
+                        <button class="btn btn-outline-primary d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarToggle" aria-controls="sidebarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <div class="collapse navbar-collapse" id="sidebarToggle">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="#">店铺管理</a>
+                                </li>
+                            </ul>
+                            <div class="d-flex">
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-user mr-1"></i> 管理员
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                        <li><a class="dropdown-item" href="#">个人资料</a></li>
+                                        <li><a class="dropdown-item" href="#">设置</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="#">退出登录</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                
+                <!-- 页面标题和操作按钮 -->
+                <div class="d-flex justify-content-between align-items-center mb-4 fade-in">
+                    <h1 class="h3 mb-0 text-gray-800">店铺管理</h1>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-primary" id="saveBtn">
+                            <i class="fa fa-save mr-1"></i> 保存
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" id="previewBtn">
+                            <i class="fa fa-eye mr-1"></i> 预览
+                        </button>
+                        <button type="button" class="btn btn-primary" id="publishBtn">
+                            <i class="fa fa-paper-plane mr-1"></i> 发布
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 店铺管理选项卡 -->
+                <div class="card shadow mb-4 fade-in" style="animation-delay: 0.2s;">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs" id="shopTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="appearance-tab" data-bs-toggle="tab" data-bs-target="#appearance" type="button" role="tab">外观装修</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="basic-info-tab" data-bs-toggle="tab" data-bs-target="#basic-info" type="button" role="tab">基础信息</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab">支付设置</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="delivery-tab" data-bs-toggle="tab" data-bs-target="#delivery" type="button" role="tab">配送设置</button>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="tab-content" id="shopTabsContent">
+                            <!-- 外观装修选项卡 -->
+                            <div class="tab-pane fade show active" id="appearance" role="tabpanel">
+                                <div class="row">
+                                    <!-- 左侧配置面板 -->
+                                    <div class="col-md-4">
+                                        <div class="card mb-4">
+                                            <div class="card-header bg-primary text-white">
+                                                <h5 class="mb-0">导航模块</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="text-muted mb-3">拖拽模块到右侧预览区域进行布局</p>
+                                                <div id="navModules">
+                                                    <div class="drag-module" draggable="true">
+                                                        <i class="fa fa-home mr-2"></i> 首页
+                                                    </div>
+                                                    <div class="drag-module" draggable="true">
+                                                        <i class="fa fa-th-large mr-2"></i> 商品分类
+                                                    </div>
+                                                    <div class="drag-module" draggable="true">
+                                                        <i class="fa fa-fire mr-2"></i> 促销活动
+                                                    </div>
+                                                    <div class="drag-module" draggable="true">
+                                                        <i class="fa fa-star mr-2"></i> 推荐商品
+                                                    </div>
+                                                    <div class="drag-module" draggable="true">
+                                                        <i class="fa fa-bullhorn mr-2"></i> 店铺公告
+                                                    </div>
+                                                    <div class="drag-module" draggable="true">
+                                                        <i class="fa fa-info-circle mr-2"></i> 关于我们
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="card">
+                                            <div class="card-header bg-primary text-white">
+                                                <h5 class="mb-0">内容模块</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="contentModules">
+                                                    <div class="drag-module" draggable="true">
+                                                        <i class="fa fa-sliders mr-2"></i> 轮播图
+                                                    </div>
+                                                    <div class="drag-module" draggable="true">
+                                                        <i class="fa fa-th mr-2"></i> 商品网格
+                                                    </div>
+                                                    <div class="drag-module" draggable="true">
+                                                        <i class="fa fa-list mr-2"></i> 商品列表
+                                                    </div>
+                                                    <div class="drag-module" draggable="true">
+                                                        <i class="fa fa-tags mr-2"></i> 促销标签
+                                                    </div>
+                                                    <div class="drag-module" draggable="true">
+                                                        <i class="fa fa-comments mr-2"></i> 客户评价
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 右侧预览面板 -->
+                                    <div class="col-md-8">
+                                        <div class="card">
+                                            <div class="card-header bg-secondary text-white">
+                                                <h5 class="mb-0">店铺预览</h5>
+                                            </div>
+                                            <div class="card-body p-0">
+                                                <div class="shop-preview" id="shopPreview">
+                                                    <!-- 头部区域 -->
+                                                    <div class="preview-module bg-primary text-white p-4 text-center">
+                                                        <h2>多彩电商官方旗舰店</h2>
+                                                        <p class="mb-0">精选优质商品，满足您的生活需求</p>
+                                                    </div>
+                                                    
+                                                    <!-- 导航区域 -->
+                                                    <div class="preview-module bg-white p-2">
+                                                        <div class="d-flex justify-content-center gap-4">
+                                                            <a href="#" class="text-dark font-weight-bold">首页</a>
+                                                            <a href="#" class="text-dark">商品分类</a>
+                                                            <a href="#" class="text-dark">促销活动</a>
+                                                            <a href="#" class="text-dark">推荐商品</a>
+                                                            <a href="#" class="text-dark">关于我们</a>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- 内容区域 -->
+                                                    <div class="preview-module">
+                                                        <div class="module-actions">
+                                                            <button class="btn btn-sm btn-outline-secondary">
+                                                                <i class="fa fa-cog"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-outline-danger">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                        <h4>轮播图区域</h4>
+                                                        <div class="bg-light rounded p-4 text-center" style="height: 200px;">
+                                                            <i class="fa fa-image fa-4x text-muted"></i>
+                                                            <p class="text-muted mt-2">在这里添加轮播图片</p>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="preview-module">
+                                                        <div class="module-actions">
+                                                            <button class="btn btn-sm btn-outline-secondary">
+                                                                <i class="fa fa-cog"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-outline-danger">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                        <h4>热门商品</h4>
+                                                        <div class="row">
+                                                            <div class="col-md-3 mb-3">
+                                                                <div class="bg-light rounded p-3 text-center" style="height: 150px;">
+                                                                    <i class="fa fa-shopping-bag fa-3x text-muted"></i>
+                                                                    <p class="text-muted mt-1">商品1</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3 mb-3">
+                                                                <div class="bg-light rounded p-3 text-center" style="height: 150px;">
+                                                                    <i class="fa fa-shopping-bag fa-3x text-muted"></i>
+                                                                    <p class="text-muted mt-1">商品2</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3 mb-3">
+                                                                <div class="bg-light rounded p-3 text-center" style="height: 150px;">
+                                                                    <i class="fa fa-shopping-bag fa-3x text-muted"></i>
+                                                                    <p class="text-muted mt-1">商品3</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3 mb-3">
+                                                                <div class="bg-light rounded p-3 text-center" style="height: 150px;">
+                                                                    <i class="fa fa-shopping-bag fa-3x text-muted"></i>
+                                                                    <p class="text-muted mt-1">商品4</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 基础信息选项卡 -->
+                            <div class="tab-pane fade" id="basic-info" role="tabpanel">
+                                <form>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="shopName" class="form-label">店铺名称</label>
+                                            <input type="text" class="form-control" id="shopName" value="多彩电商">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="shopLogo" class="form-label">店铺Logo</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" placeholder="图片URL">
+                                                <button class="btn btn-outline-secondary" type="button">上传图片</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="contactPerson" class="form-label">联系人</label>
+                                            <input type="text" class="form-control" id="contactPerson" value="王经理">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="contactPhone" class="form-label">联系电话</label>
+                                            <input type="tel" class="form-control" id="contactPhone" value="13800138000">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="shopDesc" class="form-label">店铺简介</label>
+                                        <textarea class="form-control" id="shopDesc" rows="3">多彩电商是一家专注于提供高品质生活用品的电商平台，我们致力于为客户提供优质的产品和服务。</textarea>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="serviceTime" class="form-label">客服时间</label>
+                                            <input type="text" class="form-control" id="serviceTime" value="9:00-18:00">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="email" class="form-label">电子邮箱</label>
+                                            <input type="email" class="form-control" id="email" value="service@example.com">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="shopAddress" class="form-label">店铺地址</label>
+                                        <input type="text" class="form-control" id="shopAddress" value="北京市朝阳区科技园88号">
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="businessHours" class="form-label">营业时间</label>
+                                            <input type="text" class="form-control" id="businessHours" value="9:00-21:00">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="deliveryRange" class="form-label">配送范围</label>
+                                            <input type="text" class="form-control" id="deliveryRange" value="全国">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="deliveryTime" class="form-label">配送时间</label>
+                                            <select class="form-control" id="deliveryTime">
+                                                <option value="1-2">1-2个工作日</option>
+                                                <option value="2-3" selected>2-3个工作日</option>
+                                                <option value="3-5">3-5个工作日</option>
+                                                <option value="5-7">5-7个工作日</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="returnPolicy" class="form-label">退换货政策</label>
+                                            <select class="form-control" id="returnPolicy">
+                                                <option value="7">7天无理由退换</option>
+                                                <option value="15" selected>15天无理由退换</option>
+                                                <option value="30">30天无理由退换</option>
+                                                <option value="custom">自定义</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="keywords" class="form-label">店铺关键词</label>
+                                        <input type="text" class="form-control" id="keywords" value="电商,购物,生活用品,高品质">
+                                        <small class="form-text text-muted">请使用逗号分隔多个关键词</small>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">店铺状态</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="shopStatus" id="statusActive" checked>
+                                            <label class="form-check-label" for="statusActive">
+                                                营业中
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="shopStatus" id="statusClosed">
+                                            <label class="form-check-label" for="statusClosed">
+                                                暂停营业
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="shopStatus" id="statusMaintenance">
+                                            <label class="form-check-label" for="statusMaintenance">
+                                                系统维护
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group mt-4">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa fa-save mr-2"></i>保存设置
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary ml-2">
+                                            <i class="fa fa-times mr-2"></i>取消
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <!-- 支付设置选项卡 -->
+                            <div class="tab-pane fade" id="payment" role="tabpanel">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">支付方式设置</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="paymentWechat" checked>
+                                            <label class="form-check-label" for="paymentWechat">
+                                                <i class="fa fa-weixin text-success mr-2"></i> 微信支付
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="paymentAlipay" checked>
+                                            <label class="form-check-label" for="paymentAlipay">
+                                                <i class="fa fa-credit-card text-primary mr-2"></i> 支付宝
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="paymentUnionpay">
+                                            <label class="form-check-label" for="paymentUnionpay">
+                                                <i class="fa fa-credit-card-alt text-dark mr-2"></i> 银联支付
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="paymentCard">
+                                            <label class="form-check-label" for="paymentCard">
+                                                <i class="fa fa-credit-card text-info mr-2"></i> 银行卡支付
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="paymentCOD">
+                                            <label class="form-check-label" for="paymentCOD">
+                                                <i class="fa fa-money text-warning mr-2"></i> 货到付款
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">支付账户设置</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="nav nav-tabs mb-4" id="paymentTabs" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link active" id="wechat-tab" data-bs-toggle="tab" data-bs-target="#wechat" type="button" role="tab">微信支付</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="alipay-tab" data-bs-toggle="tab" data-bs-target="#alipay" type="button" role="tab">支付宝</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="unionpay-tab" data-bs-toggle="tab" data-bs-target="#unionpay" type="button" role="tab">银联支付</button>
+                                            </li>
+                                        </ul>
+                                        
+                                        <div class="tab-content" id="paymentTabsContent">
+                                            <div class="tab-pane fade show active" id="wechat" role="tabpanel">
+                                                <form>
+                                                    <div class="mb-3">
+                                                        <label for="wechatAppid" class="form-label">微信APPID</label>
+                                                        <input type="text" class="form-control" id="wechatAppid" placeholder="请输入微信APPID">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="wechatMchid" class="form-label">微信商户号</label>
+                                                        <input type="text" class="form-control" id="wechatMchid" placeholder="请输入微信商户号">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="wechatKey" class="form-label">微信API密钥</label>
+                                                        <input type="password" class="form-control" id="wechatKey" placeholder="请输入微信API密钥">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="wechatCert" class="form-label">微信证书</label>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" placeholder="证书路径">
+                                                            <button class="btn btn-outline-secondary" type="button">上传证书</button>
+                                                        </div>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">保存设置</button>
+                                                </form>
+                                            </div>
+                                            
+                                            <div class="tab-pane fade" id="alipay" role="tabpanel">
+                                                <form>
+                                                    <div class="mb-3">
+                                                        <label for="alipayAppid" class="form-label">支付宝应用ID</label>
+                                                        <input type="text" class="form-control" id="alipayAppid" placeholder="请输入支付宝应用ID">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="alipayPublicKey" class="form-label">支付宝公钥</label>
+                                                        <textarea class="form-control" id="alipayPublicKey" rows="3" placeholder="请输入支付宝公钥"></textarea>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="alipayPrivateKey" class="form-label">支付宝私钥</label>
+                                                        <textarea class="form-control" id="alipayPrivateKey" rows="3" placeholder="请输入支付宝私钥"></textarea>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">保存设置</button>
+                                                </form>
+                                            </div>
+                                            
+                                            <div class="tab-pane fade" id="unionpay" role="tabpanel">
+                                                <form>
+                                                    <div class="mb-3">
+                                                        <label for="unionpayMerId" class="form-label">银联商户ID</label>
+                                                        <input type="text" class="form-control" id="unionpayMerId" placeholder="请输入银联商户ID">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="unionpayCert" class="form-label">银联证书</label>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" placeholder="证书路径">
+                                                            <button class="btn btn-outline-secondary" type="button">上传证书</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="unionpayKey" class="form-label">银联密钥</label>
+                                                        <input type="password" class="form-control" id="unionpayKey" placeholder="请输入银联密钥">
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">保存设置</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 配送设置选项卡 -->
+                            <div class="tab-pane fade" id="delivery" role="tabpanel">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">物流公司设置</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="deliverySF" checked>
+                                            <label class="form-check-label" for="deliverySF">
+                                                <i class="fa fa-truck mr-2"></i> 顺丰速运
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="deliveryYZ" checked>
+                                            <label class="form-check-label" for="deliveryYZ">
+                                                <i class="fa fa-truck mr-2"></i> 邮政快递
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="deliveryYT">
+                                            <label class="form-check-label" for="deliveryYT">
+                                                <i class="fa fa-truck mr-2"></i> 圆通速递
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="deliveryST">
+                                            <label class="form-check-label" for="deliveryST">
+                                                <i class="fa fa-truck mr-2"></i> 申通快递
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="deliveryYD">
+                                            <label class="form-check-label" for="deliveryYD">
+                                                <i class="fa fa-truck mr-2"></i> 韵达快递
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="deliveryJD">
+                                            <label class="form-check-label" for="deliveryJD">
+                                                <i class="fa fa-truck mr-2"></i> 京东物流
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="deliveryZT">
+                                            <label class="form-check-label" for="deliveryZT">
+                                                <i class="fa fa-truck mr-2"></i> 中通快递
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">运费模板</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <button type="button" class="btn btn-primary mb-4">
+                                            <i class="fa fa-plus mr-1"></i> 添加运费模板
+                                        </button>
+                                        
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>模板名称</th>
+                                                        <th>配送方式</th>
+                                                        <th>适用地区</th>
+                                                        <th>首重价格</th>
+                                                        <th>续重价格</th>
+                                                        <th>免费额度</th>
+                                                        <th>操作</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>全国统一运费</td>
+                                                        <td>快递</td>
+                                                        <td>全国</td>
+                                                        <td>10元/公斤</td>
+                                                        <td>5元/公斤</td>
+                                                        <td>满199元免运费</td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-outline-primary">编辑</button>
+                                                            <button class="btn btn-sm btn-outline-danger">删除</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>江浙沪包邮</td>
+                                                        <td>快递</td>
+                                                        <td>江苏、浙江、上海</td>
+                                                        <td>0元/公斤</td>
+                                                        <td>0元/公斤</td>
+                                                        <td>无</td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-outline-primary">编辑</button>
+                                                            <button class="btn btn-sm btn-outline-danger">删除</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>偏远地区运费</td>
+                                                        <td>快递</td>
+                                                        <td>新疆、西藏、青海</td>
+                                                        <td>20元/公斤</td>
+                                                        <td>15元/公斤</td>
+                                                        <td>满299元免运费</td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-outline-primary">编辑</button>
+                                                            <button class="btn btn-sm btn-outline-danger">删除</button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">自提点设置</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <button type="button" class="btn btn-primary mb-4">
+                                            <i class="fa fa-plus mr-1"></i> 添加自提点
+                                        </button>
+                                        
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>自提点名称</th>
+                                                        <th>地址</th>
+                                                        <th>联系人</th>
+                                                        <th>电话</th>
+                                                        <th>营业时间</th>
+                                                        <th>状态</th>
+                                                        <th>操作</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>总部自提点</td>
+                                                        <td>北京市朝阳区科技园88号</td>
+                                                        <td>王经理</td>
+                                                        <td>13800138000</td>
+                                                        <td>9:00-18:00</td>
+                                                        <td><span class="badge bg-success">启用</span></td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-outline-primary">编辑</button>
+                                                            <button class="btn btn-sm btn-outline-danger">停用</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>海淀分店</td>
+                                                        <td>北京市海淀区中关村大街1号</td>
+                                                        <td>李主管</td>
+                                                        <td>13900139000</td>
+                                                        <td>9:30-19:00</td>
+                                                        <td><span class="badge bg-success">启用</span></td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-outline-primary">编辑</button>
+                                                            <button class="btn btn-sm btn-outline-danger">停用</button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 引入Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 初始化动画
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加淡入动画效果
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+            
+            // 实现拖拽装修功能
+            const dragModules = document.querySelectorAll('.drag-module');
+            const dropZone = document.getElementById('shopPreview');
+            
+            dragModules.forEach(module => {
+                module.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', module.textContent);
+                    module.classList.add('bg-primary', 'text-white');
+                });
+                
+                module.addEventListener('dragend', () => {
+                    module.classList.remove('bg-primary', 'text-white');
+                });
+            });
+            
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('bg-light');
+            });
+            
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('bg-light');
+            });
+            
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('bg-light');
+                
+                const moduleName = e.dataTransfer.getData('text/plain');
+                const newModule = document.createElement('div');
+                newModule.className = 'preview-module fade-in';
+                newModule.style.animationDelay = '0s';
+                
+                // 根据模块名称创建不同的预览内容
+                let moduleContent = '';
+                if (moduleName.includes('轮播图')) {
+                    moduleContent = `
+                        <div class="module-actions">
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fa fa-cog"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                        <h4>${moduleName.trim()}</h4>
+                        <div class="bg-light rounded p-4 text-center" style="height: 200px;">
+                            <i class="fa fa-image fa-4x text-muted"></i>
+                            <p class="text-muted mt-2">在这里添加轮播图片</p>
+                        </div>
+                    `;
+                } else if (moduleName.includes('商品网格') || moduleName.includes('商品列表')) {
+                    moduleContent = `
+                        <div class="module-actions">
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fa fa-cog"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                        <h4>${moduleName.trim()}</h4>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <div class="bg-light rounded p-3 text-center" style="height: 150px;">
+                                    <i class="fa fa-shopping-bag fa-3x text-muted"></i>
+                                    <p class="text-muted mt-1">商品1</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="bg-light rounded p-3 text-center" style="height: 150px;">
+                                    <i class="fa fa-shopping-bag fa-3x text-muted"></i>
+                                    <p class="text-muted mt-1">商品2</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="bg-light rounded p-3 text-center" style="height: 150px;">
+                                    <i class="fa fa-shopping-bag fa-3x text-muted"></i>
+                                    <p class="text-muted mt-1">商品3</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="bg-light rounded p-3 text-center" style="height: 150px;">
+                                    <i class="fa fa-shopping-bag fa-3x text-muted"></i>
+                                    <p class="text-muted mt-1">商品4</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else if (moduleName.includes('促销标签')) {
+                    moduleContent = `
+                        <div class="module-actions">
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fa fa-cog"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                        <h4>${moduleName.trim()}</h4>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="bg-warning text-white p-3 rounded">
+                                    <h5 class="mb-0">限时促销：全场8折</h5>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else if (moduleName.includes('客户评价')) {
+                    moduleContent = `
+                        <div class="module-actions">
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fa fa-cog"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                        <h4>${moduleName.trim()}</h4>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="bg-white p-3 rounded border">
+                                    <div class="d-flex">
+                                        <img src="https://picsum.photos/40/40?random=1" alt="用户头像" class="rounded-circle mr-3">
+                                        <div>
+                                            <h6 class="mb-0">用户12345</h6>
+                                            <div class="text-warning">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                            <p class="mb-0">商品质量非常好，与描述一致，物流也很快，非常满意！</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    moduleContent = `
+                        <div class="module-actions">
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fa fa-cog"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                        <h4>${moduleName.trim()}</h4>
+                        <p class="text-muted">这是一个${moduleName.trim()}模块</p>
+                    `;
+                }
+                
+                newModule.innerHTML = moduleContent;
+                e.target.appendChild(newModule);
+                
+                // 为新添加的模块按钮添加事件
+                const deleteBtn = newModule.querySelector('.btn-outline-danger');
+                if (deleteBtn) {
+                    deleteBtn.addEventListener('click', function() {
+                        newModule.classList.add('fade-out');
+                        setTimeout(() => {
+                            newModule.remove();
+                        }, 300);
+                    });
+                }
+            });
+            
+            // 为已存在的模块删除按钮添加事件
+            document.querySelectorAll('.preview-module .btn-outline-danger').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const module = this.closest('.preview-module');
+                    module.classList.add('fade-out');
+                    setTimeout(() => {
+                        module.remove();
+                    }, 300);
+                });
+            });
+            
+            // 保存按钮动画
+            document.getElementById('saveBtn').addEventListener('click', function() {
+                this.innerHTML = '<i class="fa fa-spinner fa-spin mr-1"></i> 保存中...';
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fa fa-check mr-1"></i> 已保存';
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fa fa-save mr-1"></i> 保存';
+                    }, 2000);
+                }, 1000);
+            });
+            
+            // 发布按钮动画
+            document.getElementById('publishBtn').addEventListener('click', function() {
+                this.innerHTML = '<i class="fa fa-spinner fa-spin mr-1"></i> 发布中...';
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fa fa-check mr-1"></i> 已发布';
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fa fa-paper-plane mr-1"></i> 发布';
+                    }, 2000);
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客户管理 - 多彩电商管理后台</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义主题 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1890FF',
+                        secondary: '#FA8C16',
+                        success: '#52C41A',
+                        danger: '#FF4D4F',
+                        neutral: {
+                            100: '#F5F7FA',
+                            200: '#E8E8E8',
+                            300: '#F0F0F0',
+                            400: '#D9D9D9',
+                            500: '#BFBFBF',
+                            600: '#8C8C8C',
+                            700: '#666666',
+                            800: '#333333'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['思源黑体', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 2px 8px rgba(0,0,0,0.05)',
+                        'card-hover': '0 4px 16px rgba(0,0,0,0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .transition-custom {
+                transition: all 0.25s ease;
+            }
+            .hover-scale {
+                transition: transform 0.2s;
+            }
+            .hover-scale:hover {
+                transform: scale(0.98);
+            }
+            .fade-in {
+                animation: fadeIn 0.3s ease-in-out;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+        }
+    </style>
+    
+    <style>
+        /* 客户标签样式 */
+        .customer-tag {
+            @apply px-2.5 py-1 rounded-md text-xs font-medium;
+        }
+        .tag-new {
+            @apply bg-primary/10 text-primary;
+        }
+        .tag-vip {
+            @apply bg-secondary/10 text-secondary;
+        }
+        .tag-high-value {
+            @apply bg-success/10 text-success;
+        }
+        
+        /* 表格样式 */
+        .table-hover tbody tr:hover {
+            @apply bg-neutral-100;
+        }
+        
+        /* 图表容器样式 */
+        .chart-container {
+            @apply bg-white rounded-lg shadow-sm p-4 h-64;
+        }
+    </style>
+</head>
+<body class="bg-neutral-100 min-h-screen">
+    <!-- 顶部导航栏 -->
+    <header class="bg-white shadow-sm fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-6 py-3">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-store text-primary text-xl"></i>
+                <span class="text-lg font-bold text-neutral-800">多彩电商管理后台</span>
+            </div>
+            <div class="flex items-center space-x-6">
+                <div class="relative">
+                    <input type="text" placeholder="全局搜索..." class="pl-10 pr-4 py-2 rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-custom">
+                    <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-500"></i>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <i class="fa-regular fa-bell text-neutral-600 hover:text-primary transition-custom cursor-pointer"></i>
+                    <div class="flex items-center space-x-2">
+                        <img src="https://picsum.photos/id/64/40/40" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+                        <span class="text-neutral-700">管理员</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 左侧菜单 -->
+    <aside class="fixed top-0 left-0 bottom-0 w-64 bg-white shadow-sm pt-16 z-10 overflow-y-auto">
+        <nav class="p-4">
+            <ul class="space-y-1">
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 rounded-lg bg-primary/10 text-primary">
+                        <i class="fa-solid fa-dashboard w-6"></i>
+                        <span>数据概览</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-neutral-700 hover:bg-neutral-100 transition-custom">
+                        <i class="fa-solid fa-shopping-bag w-6"></i>
+                        <span>商品管理</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-neutral-700 hover:bg-neutral-100 transition-custom">
+                        <i class="fa-solid fa-list-ol w-6"></i>
+                        <span>订单管理</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 rounded-lg bg-primary/5 text-primary border-l-4 border-primary">
+                        <i class="fa-solid fa-users w-6"></i>
+                        <span>客户管理</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-neutral-700 hover:bg-neutral-100 transition-custom">
+                        <i class="fa-solid fa-chart-line w-6"></i>
+                        <span>销售分析</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-neutral-700 hover:bg-neutral-100 transition-custom">
+                        <i class="fa-solid fa-cog w-6"></i>
+                        <span>系统设置</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="ml-64 pt-16 pb-10 px-6">
+        <!-- 面包屑导航 -->
+        <div class="flex items-center py-4 text-sm">
+            <a href="#" class="text-primary hover:underline">首页</a>
+            <i class="fa-solid fa-chevron-right mx-2 text-neutral-400 text-xs"></i>
+            <span class="text-neutral-600">客户管理</span>
+        </div>
+        
+        <!-- 页面标题和操作按钮 -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+            <div>
+                <h1 class="text-[clamp(1.5rem,3vw,1.75rem)] font-bold text-neutral-800 mb-1">客户列表</h1>
+                <p class="text-neutral-600">共 <span class="text-primary font-medium">2,543</span> 位客户</p>
+            </div>
+            <div class="flex mt-4 md:mt-0 space-x-3">
+                <button class="flex items-center px-4 py-2 bg-white border border-neutral-200 rounded-lg text-neutral-700 hover:bg-neutral-50 transition-custom">
+                    <i class="fa-solid fa-download mr-2 text-neutral-500"></i>
+                    <span>导出客户</span>
+                </button>
+                <button class="flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-custom hover-scale">
+                    <i class="fa-solid fa-plus mr-2"></i>
+                    <span>添加客户</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 搜索筛选区域 -->
+        <div class="bg-white rounded-xl shadow-card p-5 mb-6 fade-in">
+            <div class="flex flex-col md:flex-row md:items-center gap-4">
+                <div class="flex-grow">
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <div class="flex-grow">
+                            <label class="block text-sm font-medium text-neutral-700 mb-1">客户类型</label>
+                            <div class="relative">
+                                <select class="w-full px-4 py-2 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none bg-white">
+                                    <option>全部客户</option>
+                                    <option>新客户</option>
+                                    <option>老客户</option>
+                                    <option>高价值客户</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-500 pointer-events-none"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <label class="block text-sm font-medium text-neutral-700 mb-1">搜索</label>
+                            <div class="relative">
+                                <input type="text" placeholder="搜索客户名/手机号..." class="w-full pl-10 pr-4 py-2 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-500"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow max-w-xs">
+                            <label class="block text-sm font-medium text-neutral-700 mb-1">注册时间</label>
+                            <div class="relative">
+                                <input type="date" class="w-full px-4 py-2 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-end">
+                    <button class="w-full sm:w-auto px-5 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-custom hover-scale">
+                        <i class="fa-solid fa-filter mr-2"></i>筛选
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 客户表格 -->
+        <div class="bg-white rounded-xl shadow-card p-5 mb-6 fade-in">
+            <div class="overflow-x-auto">
+                <table class="min-w-full table-hover">
+                    <thead>
+                        <tr>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-neutral-600 whitespace-nowrap">
+                                <input type="checkbox" class="rounded border-neutral-300 text-primary focus:ring-primary/20">
+                            </th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-neutral-600 whitespace-nowrap">客户ID</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-neutral-600 whitespace-nowrap">客户名</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-neutral-600 whitespace-nowrap">手机号</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-neutral-600 whitespace-nowrap">标签</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-neutral-600 whitespace-nowrap">消费金额</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-neutral-600 whitespace-nowrap">最后购买</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-neutral-600 whitespace-nowrap">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-t border-neutral-200">
+                            <td class="py-3 px-4">
+                                <input type="checkbox" class="rounded border-neutral-300 text-primary focus:ring-primary/20">
+                            </td>
+                            <td class="py-3 px-4 text-sm text-neutral-800 whitespace-nowrap">10001</td>
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <img src="https://picsum.photos/id/1005/32/32" alt="客户头像" class="w-8 h-8 rounded-full mr-3">
+                                    <span class="text-sm font-medium text-neutral-800">张三</span>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 text-sm text-neutral-800 whitespace-nowrap">138****1234</td>
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                <span class="customer-tag tag-vip">VIP</span>
+                                <span class="customer-tag tag-new">新客户</span>
+                            </td>
+                            <td class="py-3 px-4 text-sm font-medium text-neutral-800 whitespace-nowrap">¥12,560</td>
+                            <td class="py-3 px-4 text-sm text-neutral-600 whitespace-nowrap">2023-05-15</td>
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                <button class="text-primary hover:text-primary/80 text-sm mr-4 transition-custom">
+                                    <i class="fa-solid fa-eye mr-1"></i> 详情
+                                </button>
+                                <button class="text-neutral-700 hover:text-primary text-sm transition-custom">
+                                    <i class="fa-solid fa-pencil mr-1"></i> 编辑
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="border-t border-neutral-200">
+                            <td class="py-3 px-4">
+                                <input type="checkbox" class="rounded border-neutral-300 text-primary focus:ring-primary/20">
+                            </td>
+                            <td class="py-3 px-4 text-sm text-neutral-800 whitespace-nowrap">10002</td>
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <img src="https://picsum.photos/id/1006/32/32" alt="客户头像" class="w-8 h-8 rounded-full mr-3">
+                                    <span class="text-sm font-medium text-neutral-800">李四</span>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 text-sm text-neutral-800 whitespace-nowrap">139****5678</td>
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                <span class="customer-tag tag-high-value">高价值</span>
+                            </td>
+                            <td class="py-3 px-4 text-sm font-medium text-neutral-800 whitespace-nowrap">¥35,820</td>
+                            <td class="py-3 px-4 text-sm text-neutral-600 whitespace-nowrap">2023-05-12</td>
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                <button class="text-primary hover:text-primary/80 text-sm mr-4 transition-custom">
+                                    <i class="fa-solid fa-eye mr-1"></i> 详情
+                                </button>
+                                <button class="text-neutral-700 hover:text-primary text-sm transition-custom">
+                                    <i class="fa-solid fa-pencil mr-1"></i> 编辑
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="border-t border-neutral-200">
+                            <td class="py-3 px-4">
+                                <input type="checkbox" class="rounded border-neutral-300 text-primary focus:ring-primary/20">
+                            </td>
+                            <td class="py-3 px-4 text-sm text-neutral-800 whitespace-nowrap">10003</td>
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <img src="https://picsum.photos/id/1012/32/32" alt="客户头像" class="w-8 h-8 rounded-full mr-3">
+                                    <span class="text-sm font-medium text-neutral-800">王五</span>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 text-sm text-neutral-800 whitespace-nowrap">137****9012</td>
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                <span class="customer-tag tag-new">新客户</span>
+                            </td>
+                            <td class="py-3 px-4 text-sm font-medium text-neutral-800 whitespace-nowrap">¥2,350</td>
+                            <td class="py-3 px-4 text-sm text-neutral-600 whitespace-nowrap">2023-05-08</td>
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                <button class="text-primary hover:text-primary/80 text-sm mr-4 transition-custom">
+                                    <i class="fa-solid fa-eye mr-1"></i> 详情
+                                </button>
+                                <button class="text-neutral-700 hover:text-primary text-sm transition-custom">
+                                    <i class="fa-solid fa-pencil mr-1"></i> 编辑
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="border-t border-neutral-200">
+                            <td class="py-3 px-4">
+                                <input type="checkbox" class="rounded border-neutral-300 text-primary focus:ring-primary/20">
+                            </td>
+                            <td class="py-3 px-4 text-sm text-neutral-800 whitespace-nowrap">10004</td>
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <img src="https://picsum.photos/id/1027/32/32" alt="客户头像" class="w-8 h-8 rounded-full mr-3">
+                                    <span class="text-sm font-medium text-neutral-800">赵六</span>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 text-sm text-neutral-800 whitespace-nowrap">136****3456</td>
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                <span class="customer-tag tag-vip">VIP</span>
+                            </td>
+                            <td class="py-3 px-4 text-sm font-medium text-neutral-800 whitespace-nowrap">¥8,640</td>
+                            <td class="py-3 px-4 text-sm text-neutral-600 whitespace-nowrap">2023-05-05</td>
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                <button class="text-primary hover:text-primary/80 text-sm mr-4 transition-custom">
+                                    <i class="fa-solid fa-eye mr-1"></i> 详情
+                                </button>
+                                <button class="text-neutral-700 hover:text-primary text-sm transition-custom">
+                                    <i class="fa-solid fa-pencil mr-1"></i> 编辑
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="border-t border-neutral-200">
+                            <td class="py-3 px-4">
+                                <input type="checkbox" class="rounded border-neutral-300 text-primary focus:ring-primary/20">
+                            </td>
+                            <td class="py-3 px-4 text-sm text-neutral-800 whitespace-nowrap">10005</td>
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <img src="https://picsum.photos/id/1074/32/32" alt="客户头像" class="w-8 h-8 rounded-full mr-3">
+                                    <span class="text-sm font-medium text-neutral-800">孙七</span>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 text-sm text-neutral-800 whitespace-nowrap">135****7890</td>
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                <span class="customer-tag tag-high-value">高价值</span>
+                            </td>
+                            <td class="py-3 px-4 text-sm font-medium text-neutral-800 whitespace-nowrap">¥42,350</td>
+                            <td class="py-3 px-4 text-sm text-neutral-600 whitespace-nowrap">2023-05-01</td>
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                <button class="text-primary hover:text-primary/80 text-sm mr-4 transition-custom">
+                                    <i class="fa-solid fa-eye mr-1"></i> 详情
+                                </button>
+                                <button class="text-neutral-700 hover:text-primary text-sm transition-custom">
+                                    <i class="fa-solid fa-pencil mr-1"></i> 编辑
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 分页 -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-6">
+                <div class="text-sm text-neutral-600 mb-4 sm:mb-0">
+                    显示 <span class="font-medium">1</span> 到 <span class="font-medium">5</span> 条，共 <span class="font-medium">2,543</span> 条
+                </div>
+                <div class="flex items-center">
+                    <button class="w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-200 text-neutral-600 hover:border-primary hover:text-primary transition-custom mr-2">
+                        <i class="fa-solid fa-chevron-left text-xs"></i>
+                    </button>
+                    <button class="w-9 h-9 flex items-center justify-center rounded-lg bg-primary text-white">1</button>
+                    <button class="w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-200 text-neutral-600 hover:border-primary hover:text-primary transition-custom ml-2">2</button>
+                    <button class="w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-200 text-neutral-600 hover:border-primary hover:text-primary transition-custom ml-2">3</button>
+                    <button class="w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-200 text-neutral-600 hover:border-primary hover:text-primary transition-custom ml-2">...</button>
+                    <button class="w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-200 text-neutral-600 hover:border-primary hover:text-primary transition-custom ml-2">509</button>
+                    <button class="w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-200 text-neutral-600 hover:border-primary hover:text-primary transition-custom ml-2">
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 客户分析看板 -->
+        <div class="bg-white rounded-xl shadow-card p-5 fade-in">
+            <h2 class="text-lg font-bold text-neutral-800 mb-5">客户分析</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 客户分层图表 -->
+                <div class="bg-white rounded-lg shadow-sm p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base font-medium text-neutral-800">客户分层</h3>
+                        <div class="text-sm text-neutral-600">
+                            <select class="bg-transparent border-none focus:outline-none">
+                                <option>最近30天</option>
+                                <option>最近90天</option>
+                                <option>今年</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="h-64 flex items-center justify-center">
+                        <img src="https://picsum.photos/id/24/600/400" alt="客户分层饼图" class="w-full h-full object-cover rounded-md">
+                    </div>
+                </div>
+                
+                <!-- 消费趋势图表 -->
+                <div class="bg-white rounded-lg shadow-sm p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base font-medium text-neutral-800">消费趋势</h3>
+                        <div class="text-sm text-neutral-600">
+                            <select class="bg-transparent border-none focus:outline-none">
+                                <option>最近30天</option>
+                                <option>最近90天</option>
+                                <option>今年</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="h-64 flex items-center justify-center">
+                        <img src="https://picsum.photos/id/48/600/400" alt="消费趋势折线图" class="w-full h-full object-cover rounded-md">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 客户统计卡片 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+                <div class="bg-white rounded-lg shadow-sm p-5 border-l-4 border-primary">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-neutral-600 text-sm mb-1">总客户数</p>
+                            <h4 class="text-2xl font-bold text-neutral-800">2,543</h4>
+                            <p class="text-success text-sm mt-2">
+                                <i class="fa-solid fa-arrow-up mr-1"></i> 8.2% <span class="text-neutral-600">较上月</span>
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                            <i class="fa-solid fa-users text-primary text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm p-5 border-l-4 border-secondary">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-neutral-600 text-sm mb-1">本月新增</p>
+                            <h4 class="text-2xl font-bold text-neutral-800">186</h4>
+                            <p class="text-success text-sm mt-2">
+                                <i class="fa-solid fa-arrow-up mr-1"></i> 12.5% <span class="text-neutral-600">较上月</span>
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center">
+                            <i class="fa-solid fa-user-plus text-secondary text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm p-5 border-l-4 border-success">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-neutral-600 text-sm mb-1">高价值客户</p>
+                            <h4 class="text-2xl font-bold text-neutral-800">427</h4>
+                            <p class="text-success text-sm mt-2">
+                                <i class="fa-solid fa-arrow-up mr-1"></i> 5.3% <span class="text-neutral-600">较上月</span>
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center">
+                            <i class="fa-solid fa-diamond text-success text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm p-5 border-l-4 border-neutral-600">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-neutral-600 text-sm mb-1">平均客单价</p>
+                            <h4 class="text-2xl font-bold text-neutral-800">¥1,248</h4>
+                            <p class="text-danger text-sm mt-2">
+                                <i class="fa-solid fa-arrow-down mr-1"></i> 2.1% <span class="text-neutral-600">较上月</span>
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-neutral-200 flex items-center justify-center">
+                            <i class="fa-solid fa-money-bill text-neutral-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="ml-64 bg-white py-4 px-6 border-t border-neutral-200">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div class="text-neutral-600 text-sm">
+                © 2023 多彩电商管理后台. 保留所有权利.
+            </div>
+            <div class="flex items-center mt-4 md:mt-0">
+                <a href="#" class="text-neutral-600 hover:text-primary text-sm mr-6">使用帮助</a>
+                <a href="#" class="text-neutral-600 hover:text-primary text-sm mr-6">隐私政策</a>
+                <a href="#" class="text-neutral-600 hover:text-primary text-sm">联系我们</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加淡入动画
+            document.querySelectorAll('.fade-in').forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(10px)';
+                el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+            
+            // 表格行悬停效果增强
+            document.querySelectorAll('tbody tr').forEach(row => {
+                row.addEventListener('mouseenter', () => {
+                    row.style.transform = 'translateX(2px)';
+                    row.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+                    row.style.transition = 'all 0.2s ease';
+                });
+                
+                row.addEventListener('mouseleave', () => {
+                    row.style.transform = 'translateX(0)';
+                    row.style.boxShadow = 'none';
+                });
+            });
+        });
+        
+        // 模拟数据加载
+        function loadMoreData() {
+            // 显示加载中状态
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.className = 'col-span-full text-center py-8';
+            loadingIndicator.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-primary"></i> 加载中...';
+            
+            const tableContainer = document.querySelector('tbody');
+            tableContainer.appendChild(loadingIndicator);
+            
+            // 模拟3秒后加载完成
+            setTimeout(() => {
+                loadingIndicator.remove();
+                // 这里可以添加新的数据行
+            }, 3000);
+        }
+    </script>
+</body>
+</html>    

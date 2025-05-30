@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>售后管理 - 多彩电商管理后台</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome -->
+    <link href="bootstrap5.13/css/bootstrap-grid.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义主题 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1890FF',
+                        success: '#52C41A',
+                        warning: '#FAAD14',
+                        danger: '#FF4D4F',
+                        neutral: {
+                            100: '#F5F7FA',
+                            200: '#E8E8E8',
+                            300: '#F0F0F0',
+                            400: '#D9D9D9',
+                            500: '#BFBFBF',
+                            600: '#8C8C8C',
+                            700: '#666666',
+                            800: '#333333'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 2px 8px rgba(0,0,0,0.05)',
+                        'card-hover': '0 4px 16px rgba(0,0,0,0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .card-transition {
+                transition: all 0.3s ease;
+            }
+            .fade-in {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        }
+    </style>
+    
+    <style>
+        /* 售后状态标签样式 */
+        .status-tag {
+            @apply px-2 py-1 rounded-full text-xs font-medium;
+        }
+        .status-pending {
+            @apply bg-warning/10 text-warning;
+        }
+        .status-processing {
+            @apply bg-primary/10 text-primary;
+        }
+        .status-completed {
+            @apply bg-success/10 text-success;
+        }
+        .status-rejected {
+            @apply bg-danger/10 text-danger;
+        }
+        
+        /* 案例卡片样式 */
+        .case-card {
+            @apply bg-white rounded-xl shadow-card p-5 mb-4 card-transition hover:shadow-card-hover;
+        }
+        .case-card:hover {
+            @apply transform -translate-y-1;
+        }
+    </style>
+</head>
+<body class="bg-neutral-100 min-h-screen">
+    <!-- 顶部导航栏 -->
+    <header class="bg-white shadow-sm fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-6 py-3">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-shopping-bag text-primary text-xl"></i>
+                <span class="text-lg font-bold text-neutral-800">多彩电商管理后台</span>
+            </div>
+            <div class="flex items-center space-x-6">
+                <div class="relative">
+                    <input type="text" placeholder="全局搜索..." class="pl-10 pr-4 py-2 rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-custom">
+                    <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-500"></i>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <i class="fa fa-bell-o text-neutral-600 hover:text-primary transition-custom cursor-pointer"></i>
+                    <div class="flex items-center space-x-2">
+                        <img src="https://picsum.photos/id/64/40/40" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+                        <span class="text-neutral-700">管理员</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 左侧菜单 -->
+    <aside class="fixed top-0 left-0 bottom-0 w-64 bg-white shadow-sm pt-16 z-10 overflow-y-auto">
+        <nav class="p-4">
+            <ul class="space-y-1">
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-neutral-700 hover:bg-neutral-100 transition-custom">
+                        <i class="fa fa-dashboard w-6"></i>
+                        <span>数据概览</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-neutral-700 hover:bg-neutral-100 transition-custom">
+                        <i class="fa fa-shopping-bag w-6"></i>
+                        <span>商品管理</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-neutral-700 hover:bg-neutral-100 transition-custom">
+                        <i class="fa fa-list-ol w-6"></i>
+                        <span>订单管理</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 rounded-lg bg-primary/5 text-primary border-l-4 border-primary">
+                        <i class="fa fa-refresh w-6"></i>
+                        <span>售后管理</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-neutral-700 hover:bg-neutral-100 transition-custom">
+                        <i class="fa fa-users w-6"></i>
+                        <span>客户管理</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-neutral-700 hover:bg-neutral-100 transition-custom">
+                        <i class="fa fa-chart-line w-6"></i>
+                        <span>销售分析</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-4 py-3 rounded-lg text-neutral-700 hover:bg-neutral-100 transition-custom">
+                        <i class="fa fa-cog w-6"></i>
+                        <span>系统设置</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="ml-64 pt-16 pb-10 px-6">
+        <!-- 面包屑导航 -->
+        <div class="flex items-center py-4 text-sm">
+            <a href="#" class="text-primary hover:underline">首页</a>
+            <i class="fa fa-chevron-right mx-2 text-neutral-400 text-xs"></i>
+            <span class="text-neutral-600">售后管理</span>
+        </div>
+        
+        <!-- 页面标题 -->
+        <div class="mb-6">
+            <h1 class="text-[clamp(1.5rem,3vw,1.75rem)] font-bold text-neutral-800 mb-1">售后管理</h1>
+            <p class="text-neutral-600">处理退款、退货和纠纷，维护良好的客户关系</p>
+        </div>
+        
+        <!-- 售后统计卡片 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 fade-in">
+            <div class="bg-white rounded-xl shadow-card p-5 card-transition hover:shadow-card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-neutral-600 text-sm mb-1">待处理售后</p>
+                        <h3 class="text-2xl font-bold text-neutral-800">42</h3>
+                        <p class="text-danger text-sm mt-2">
+                            <i class="fa fa-arrow-up mr-1"></i> 5.2% <span class="text-neutral-600">较上周</span>
+                        </p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-warning/10 flex items-center justify-center">
+                        <i class="fa fa-clock-o text-warning text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-card p-5 card-transition hover:shadow-card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-neutral-600 text-sm mb-1">退货率</p>
+                        <h3 class="text-2xl font-bold text-neutral-800">5.2%</h3>
+                        <p class="text-success text-sm mt-2">
+                            <i class="fa fa-arrow-down mr-1"></i> 1.3% <span class="text-neutral-600">较上周</span>
+                        </p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                        <i class="fa fa-refresh text-primary text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-card p-5 card-transition hover:shadow-card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-neutral-600 text-sm mb-1">退款金额</p>
+                        <h3 class="text-2xl font-bold text-neutral-800">¥12,450</h3>
+                        <p class="text-danger text-sm mt-2">
+                            <i class="fa fa-arrow-up mr-1"></i> 8.7% <span class="text-neutral-600">较上周</span>
+                        </p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-danger/10 flex items-center justify-center">
+                        <i class="fa fa-money text-danger text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-card p-5 card-transition hover:shadow-card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-neutral-600 text-sm mb-1">客户满意度</p>
+                        <h3 class="text-2xl font-bold text-neutral-800">96.8%</h3>
+                        <p class="text-success text-sm mt-2">
+                            <i class="fa fa-arrow-up mr-1"></i> 2.1% <span class="text-neutral-600">较上周</span>
+                        </p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center">
+                        <i class="fa fa-smile-o text-success text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 售后处理区域 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- 待处理售后列表 -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-card p-5 mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-bold text-neutral-800">待处理售后申请</h2>
+                        <div class="text-sm text-primary hover:underline cursor-pointer">
+                            查看全部 <i class="fa fa-chevron-right text-xs ml-1"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <!-- 售后申请卡片1 -->
+                        <div class="case-card">
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-neutral-200 flex items-center justify-center mr-3">
+                                        <i class="fa fa-user-o text-neutral-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium text-neutral-800">退款申请 #R20230515001</h4>
+                                        <p class="text-sm text-neutral-600">申请人: 张三 · 2小时前</p>
+                                    </div>
+                                </div>
+                                <span class="status-tag status-pending">待处理</span>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4 mb-4">
+                                <img src="https://picsum.photos/id/1/80/80" alt="商品图片" class="w-20 h-20 object-cover rounded-lg">
+                                <div>
+                                    <p class="font-medium text-neutral-800 mb-1">iPhone 13 Pro Max 256G 远峰蓝色</p>
+                                    <p class="text-sm text-neutral-600 mb-1">订单号: #ORD20230510001</p>
+                                    <p class="text-sm text-neutral-600">申请原因: 商品质量问题</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-end space-x-3">
+                                <button class="px-4 py-2 border border-neutral-200 rounded-lg text-neutral-700 hover:bg-neutral-100 transition-custom">
+                                    查看详情
+                                </button>
+                                <button class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-custom">
+                                    处理申请
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 售后申请卡片2 -->
+                        <div class="case-card">
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-neutral-200 flex items-center justify-center mr-3">
+                                        <i class="fa fa-user-o text-neutral-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium text-neutral-800">退货申请 #R20230514002</h4>
+                                        <p class="text-sm text-neutral-600">申请人: 李四 · 5小时前</p>
+                                    </div>
+                                </div>
+                                <span class="status-tag status-pending">待处理</span>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4 mb-4">
+                                <img src="https://picsum.photos/id/20/80/80" alt="商品图片" class="w-20 h-20 object-cover rounded-lg">
+                                <div>
+                                    <p class="font-medium text-neutral-800 mb-1">男士休闲衬衫 蓝色 L码</p>
+                                    <p class="text-sm text-neutral-600 mb-1">订单号: #ORD20230512003</p>
+                                    <p class="text-sm text-neutral-600">申请原因: 尺码不合适</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-end space-x-3">
+                                <button class="px-4 py-2 border border-neutral-200 rounded-lg text-neutral-700 hover:bg-neutral-100 transition-custom">
+                                    查看详情
+                                </button>
+                                <button class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-custom">
+                                    处理申请
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 售后申请卡片3 -->
+                        <div class="case-card">
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-neutral-200 flex items-center justify-center mr-3">
+                                        <i class="fa fa-user-o text-neutral-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium text-neutral-800">换货申请 #R20230513003</h4>
+                                        <p class="text-sm text-neutral-600">申请人: 王五 · 1天前</p>
+                                    </div>
+                                </div>
+                                <span class="status-tag status-processing">处理中</span>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4 mb-4">
+                                <img src="https://picsum.photos/id/96/80/80" alt="商品图片" class="w-20 h-20 object-cover rounded-lg">
+                                <div>
+                                    <p class="font-medium text-neutral-800 mb-1">进口巧克力礼盒 250g</p>
+                                    <p class="text-sm text-neutral-600 mb-1">订单号: #ORD20230508005</p>
+                                    <p class="text-sm text-neutral-600">申请原因: 商品损坏</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-end space-x-3">
+                                <button class="px-4 py-2 border border-neutral-200 rounded-lg text-neutral-700 hover:bg-neutral-100 transition-custom">
+                                    查看详情
+                                </button>
+                                <button class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-custom">
+                                    处理申请
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 售后趋势图表 -->
+                <div class="bg-white rounded-xl shadow-card p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-bold text-neutral-800">售后趋势分析</h2>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 text-sm rounded-md bg-primary text-white">周</button>
+                            <button class="px-3 py-1 text-sm rounded-md bg-neutral-100 text-neutral-600 hover:bg-neutral-200 transition-custom">月</button>
+                            <button class="px-3 py-1 text-sm rounded-md bg-neutral-100 text-neutral-600 hover:bg-neutral-200 transition-custom">季</button>
+                        </div>
+                    </div>
+                    
+                    <div class="h-80 flex items-center justify-center">
+                        <img src="https://picsum.photos/id/3/800/400" alt="售后趋势图表" class="w-full h-full object-cover rounded-lg">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 纠纷处理案例库 -->
+            <div>
+                <div class="bg-white rounded-xl shadow-card p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-bold text-neutral-800">纠纷处理案例库</h2>
+                        <div class="text-sm text-primary hover:underline cursor-pointer">
+                            新增案例 <i class="fa fa-plus text-xs ml-1"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <!-- 案例1 -->
+                        <div class="case-card">
+                            <h4 class="font-medium text-neutral-800 mb-2">商品质量纠纷处理指南</h4>
+                            <p class="text-sm text-neutral-600 mb-3 line-clamp-2">针对客户反馈商品存在质量问题的处理流程和沟通技巧，包含质检标准和退换货政策说明...</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-neutral-500">更新于 2023-05-10</span>
+                                <button class="text-primary text-sm hover:underline">查看详情</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 案例2 -->
+                        <div class="case-card">
+                            <h4 class="font-medium text-neutral-800 mb-2">物流损坏赔偿流程</h4>
+                            <p class="text-sm text-neutral-600 mb-3 line-clamp-2">客户收到商品发现物流过程中损坏的处理办法，包含与物流公司的索赔流程和客户安抚方案...</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-neutral-500">更新于 2023-05-05</span>
+                                <button class="text-primary text-sm hover:underline">查看详情</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 案例3 -->
+                        <div class="case-card">
+                            <h4 class="font-medium text-neutral-800 mb-2">退款争议解决方案</h4>
+                            <p class="text-sm text-neutral-600 mb-3 line-clamp-2">客户要求退款但不符合退款政策的处理方式，包含协商技巧、部分退款方案和客户投诉应对...</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-neutral-500">更新于 2023-04-28</span>
+                                <button class="text-primary text-sm hover:underline">查看详情</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 案例4 -->
+                        <div class="case-card">
+                            <h4 class="font-medium text-neutral-800 mb-2">退换货政策说明模板</h4>
+                            <p class="text-sm text-neutral-600 mb-3 line-clamp-2">用于向客户解释公司退换货政策的标准话术模板，包含常见问题解答和特殊情况处理指引...</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-neutral-500">更新于 2023-04-15</span>
+                                <button class="text-primary text-sm hover:underline">查看详情</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 售后政策 -->
+                <div class="bg-white rounded-xl shadow-card p-5 mt-6">
+                    <h2 class="text-lg font-bold text-neutral-800 mb-4">售后政策</h2>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center mr-3 flex-shrink-0">
+                                <span class="text-xs text-primary font-bold">1</span>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-neutral-800 mb-1">7天无理由退换</h4>
+                                <p class="text-sm text-neutral-600">客户收到商品后7天内，如商品保持原有品质和包装，可申请无理由退换货。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center mr-3 flex-shrink-0">
+                                <span class="text-xs text-primary font-bold">2</span>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-neutral-800 mb-1">质量问题全额退款</h4>
+                                <p class="text-sm text-neutral-600">如商品存在质量问题，经核实后可申请全额退款，往返运费由商家承担。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center mr-3 flex-shrink-0">
+                                <span class="text-xs text-primary font-bold">3</span>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-neutral-800 mb-1">物流损坏免费补发</h4>
+                                <p class="text-sm text-neutral-600">如商品在运输过程中损坏，客户可提供照片证明，我们将免费重新发货。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full mt-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary/5 transition-custom">
+                        查看完整政策
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 售后流程 -->
+        <div class="bg-white rounded-xl shadow-card p-6 mb-8">
+            <h2 class="text-lg font-bold text-neutral-800 mb-6">售后处理流程</h2>
+            
+            <div class="flex flex-col md:flex-row justify-between items-center md:items-start space-y-6 md:space-y-0">
+                <div class="flex flex-col items-center md:items-start">
+                    <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold mb-3">
+                        1
+                    </div>
+                    <h3 class="font-medium text-neutral-800 mb-1 text-center md:text-left">客户申请</h3>
+                    <p class="text-sm text-neutral-600 text-center md:text-left max-w-xs">客户提交售后申请并说明理由</p>
+                </div>
+                
+                <div class="hidden md:block flex-grow h-0.5 bg-neutral-200 my-auto mx-6 relative">
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-neutral-100 rounded-full flex items-center justify-center">
+                        <i class="fa fa-arrow-right text-neutral-400"></i>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col items-center md:items-start">
+                    <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold mb-3">
+                        2
+                    </div>
+                    <h3 class="font-medium text-neutral-800 mb-1 text-center md:text-left">审核申请</h3>
+                    <p class="text-sm text-neutral-600 text-center md:text-left max-w-xs">客服审核申请是否符合售后政策</p>
+                </div>
+                
+                <div class="hidden md:block flex-grow h-0.5 bg-neutral-200 my-auto mx-6 relative">
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-neutral-100 rounded-full flex items-center justify-center">
+                        <i class="fa fa-arrow-right text-neutral-400"></i>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col items-center md:items-start">
+                    <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold mb-3">
+                        3
+                    </div>
+                    <h3 class="font-medium text-neutral-800 mb-1 text-center md:text-left">处理方案</h3>
+                    <p class="text-sm text-neutral-600 text-center md:text-left max-w-xs">提供退款、换货或维修等解决方案</p>
+                </div>
+                
+                <div class="hidden md:block flex-grow h-0.5 bg-neutral-200 my-auto mx-6 relative">
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-neutral-100 rounded-full flex items-center justify-center">
+                        <i class="fa fa-arrow-right text-neutral-400"></i>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col items-center md:items-start">
+                    <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold mb-3">
+                        4
+                    </div>
+                    <h3 class="font-medium text-neutral-800 mb-1 text-center md:text-left">执行处理</h3>
+                    <p class="text-sm text-neutral-600 text-center md:text-left max-w-xs">根据方案执行退款、补发或维修</p>
+                </div>
+                
+                <div class="hidden md:block flex-grow h-0.5 bg-neutral-200 my-auto mx-6 relative">
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-neutral-100 rounded-full flex items-center justify-center">
+                        <i class="fa fa-arrow-right text-neutral-400"></i>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col items-center md:items-start">
+                    <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl font-bold mb-3">
+                        5
+                    </div>
+                    <h3 class="font-medium text-neutral-800 mb-1 text-center md:text-left">完成确认</h3>
+                    <p class="text-sm text-neutral-600 text-center md:text-left max-w-xs">客户确认处理结果并评价</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="ml-64 bg-white py-4 px-6 border-t border-neutral-200">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div class="text-neutral-600 text-sm">
+                © 2023 多彩电商管理后台. 保留所有权利.
+            </div>
+            <div class="flex items-center mt-4 md:mt-0">
+                <a href="#" class="text-neutral-600 hover:text-primary text-sm mr-6">使用帮助</a>
+                <a href="#" class="text-neutral-600 hover:text-primary text-sm mr-6">隐私政策</a>
+                <a href="#" class="text-neutral-600 hover:text-primary text-sm">联系我们</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加淡入动画
+            document.querySelectorAll('.fade-in').forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(10px)';
+                el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+            
+            // 案例卡片交互
+            document.querySelectorAll('.case-card').forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-5px)';
+                    card.style.boxShadow = '0 4px 16px rgba(0,0,0,0.08)';
+                    card.style.transition = 'all 0.3s ease';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                    card.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

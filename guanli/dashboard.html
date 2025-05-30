@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据看板 - 多彩电商管理后台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+        }
+        
+        /* 顶部导航栏样式 */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: #1890ff;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 30px;
+            margin-right: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .header-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+        
+        .notification {
+            position: relative;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #f5222d;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .search-box {
+            margin-right: 20px;
+        }
+        
+        .search-box input {
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: none;
+            outline: none;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #fff;
+            color: #1890ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+        
+        /* 主内容区样式 (全宽) */
+        .main-content {
+            flex: 1;
+            margin-left: 220px;
+            margin-top: 60px;
+            padding: 20px;
+            background-color: #f5f5f5;
+            min-height: calc(100vh - 60px);
+        }
+        
+        .page-header {
+            margin-bottom: 20px;
+        }
+        
+        .page-title {
+            font-size: 20px;
+            color: #333;
+        }
+        
+        /* 数据看板样式 */
+        .metrics-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .metric-card {
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 20px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+        
+        .metric-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .metric-change {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .metric-change.up {
+            color: #52c41a;
+        }
+        
+        .metric-change.down {
+            color: #ff4d4f;
+        }
+        
+        .charts-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .chart-card {
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 20px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+        
+        .chart-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .chart-placeholder {
+            height: 300px;
+            background-color: #fafafa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            border-radius: 4px;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        
+        .action-card {
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 15px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #e6f7ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            color: #1890ff;
+            font-size: 18px;
+        }
+        
+        .action-title {
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="header">
+        <div class="logo">
+            <img src="https://via.placeholder.com/30" alt="Logo">
+            <h1>多彩电商管理后台</h1>
+        </div>
+        <div class="header-right">
+            <div class="notification">
+                <span>🔔</span>
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="搜索订单/商品/客户...">
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <span>管理员</span>
+            </div>
+        </div>
+    </header>
+    
+    <!-- 主内容区 (全宽) -->
+    <main class="main-content" style="margin-left: 0; width: 100%;">
+        <div class="page-header">
+            <h1 class="page-title">数据看板</h1>
+        </div>
+        
+        <!-- 关键指标卡片 -->
+        <div class="metrics-container">
+            <div class="metric-card">
+                <div class="metric-title">今日销售额</div>
+                <div class="metric-value">¥28,560</div>
+                <div class="metric-change up">
+                    <span>↑ 12.5%</span>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">待处理订单</div>
+                <div class="metric-value">24</div>
+                <div class="metric-change down">
+                    <span>↓ 8.3%</span>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">库存预警</div>
+                <div class="metric-value">7</div>
+                <div class="metric-change up">
+                    <span>↑ 3.2%</span>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">新增客户</div>
+                <div class="metric-value">56</div>
+                <div class="metric-change up">
+                    <span>↑ 15.8%</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 图表区域 -->
+        <div class="charts-container">
+            <div class="chart-card">
+                <div class="chart-title">近7天销售额趋势</div>
+                <div class="chart-placeholder">折线图 - 近7天销售额数据</div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">热门商品TOP5</div>
+                <div class="chart-placeholder">柱状图 - 热门商品数据</div>
+            </div>
+        </div>
+        
+        <!-- 快捷操作 -->
+        <div class="quick-actions">
+            <div class="action-card">
+                <div class="action-icon">📦</div>
+                <div class="action-title">新建商品</div>
+            </div>
+            <div class="action-card">
+                <div class="action-icon">🎯</div>
+                <div class="action-title">创建促销</div>
+            </div>
+            <div class="action-card">
+                <div class="action-icon">🚚</div>
+                <div class="action-title">处理发货</div>
+            </div>
+            <div class="action-card">
+                <div class="action-icon">🔄</div>
+                <div class="action-title">查看退货</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 通用导航函数
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        // 页面加载时初始化菜单状态
+        document.addEventListener('DOMContentLoaded', function() {
+            // 数据看板菜单默认激活
+            const dashboardMenu = document.querySelector('.menu-item:nth-child(1)');
+            if(dashboardMenu) {
+                dashboardMenu.classList.add('active');
+            }
+
+            // 菜单折叠功能
+            const menuItems = document.querySelectorAll('.menu-item');
+        
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('.menu-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                document.querySelectorAll('.submenu-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                
+                // 给当前点击的菜单项添加active类
+                this.classList.add('active');
+                
+                // 切换子菜单显示
+                const submenu = this.nextElementSibling;
+                if (submenu && submenu.classList.contains('submenu')) {
+                    document.querySelectorAll('.submenu').forEach(sm => {
+                        sm.classList.remove('show');
+                    });
+                    submenu.classList.add('show');
+                }
+            });
+        });
+        
+        // 子菜单项点击
+        const submenuItems = document.querySelectorAll('.submenu-item');
+        submenuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                submenuItems.forEach(i => {
+                    i.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // 快捷操作点击
+        document.querySelectorAll('.action-card').forEach(card => {
+            card.addEventListener('click', function() {
+                alert('即将跳转到相关功能页面');
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

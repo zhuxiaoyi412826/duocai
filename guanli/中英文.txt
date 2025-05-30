@@ -1,0 +1,13 @@
+商品管理页面 shop.html
+订单管理页面 order.html
+财务管理页面 finance.html
+内容管理页面 content.html
+售后管理页面 aftersale.html
+店铺管理页面 shop-management.html
+权限管理页面 permission-management.html
+数据分析页面 data-analysis.html
+库存管理页面 stock.html
+营销管理页面 marketing.html
+系统设置页面 system-settings.html
+报表管理页面 dashboard.html
+供应商管理 supplier-management.html

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据分析 - 多彩电商管理后台</title>
+    <!-- 引入Bootstrap CSS -->
+    <link href="bootstrap5.13/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 引入Chart.js -->
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js" rel="stylesheet">
+    <style>
+        /* 自定义样式 */
+        .sidebar {
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+        
+        .sidebar-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #e9ecef;
+        }
+        
+        .sidebar-link.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        
+        .content {
+            padding: 1.5rem;
+        }
+        
+        .card-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        /* 数据分析特有样式 */
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .export-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏导航 -->
+            <div class="col-md-3 col-lg-2 sidebar d-none d-md-block">
+                <div class="p-4">
+                    <h5 class="fw-bold text-primary">多彩电商</h5>
+                    <hr>
+                    <nav>
+                        <a href="#" class="sidebar-link"><i class="fa fa-tachometer mr-2"></i> 控制台</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-store mr-2"></i> 店铺管理</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-cubes mr-2"></i> 商品管理</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-shopping-cart mr-2"></i> 订单管理</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-bullhorn mr-2"></i> 营销管理</a>
+                        <a href="#" class="sidebar-link active"><i class="fa fa-bar-chart mr-2"></i> 数据分析</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-users mr-2"></i> 客户管理</a>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- 主内容区域 -->
+            <div class="col-md-9 col-lg-10 content">
+                <!-- 顶部导航栏 -->
+                <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow-sm mb-4">
+                    <div class="container-fluid">
+                        <button class="btn btn-outline-primary d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarToggle" aria-controls="sidebarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <div class="collapse navbar-collapse" id="sidebarToggle">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="#">数据分析</a>
+                                </li>
+                            </ul>
+                            <div class="d-flex">
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-user mr-1"></i> 管理员
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                        <li><a class="dropdown-item" href="#">个人资料</a></li>
+                                        <li><a class="dropdown-item" href="#">设置</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="#">退出登录</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                
+                <!-- 页面标题和日期选择器 -->
+                <div class="d-flex justify-content-between align-items-center mb-4 fade-in">
+                    <h1 class="h3 mb-0 text-gray-800">数据分析</h1>
+                    <div class="date-range">
+                        <span>日期范围：</span>
+                        <input type="date" class="form-control" value="2025-01-01">
+                        <span>至</span>
+                        <input type="date" class="form-control" value="2025-05-22">
+                        <button class="btn btn-primary">
+                            <i class="fa fa-filter mr-1"></i> 应用
+                        </button>
+                        <button class="btn btn-outline-secondary">
+                            <i class="fa fa-calendar mr-1"></i> 今天
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 数据概览卡片 -->
+                <div class="row mb-4">
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2 card-hover">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            总销售额
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">¥1,254,890</div>
+                                        <div class="mt-2 text-sm">
+                                            <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 12.5%</span>
+                                            <span class="text-muted">较上月</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-money fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-success shadow h-100 py-2 card-hover">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                            订单总数
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">8,542</div>
+                                        <div class="mt-2 text-sm">
+                                            <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 8.2%</span>
+                                            <span class="text-muted">较上月</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-shopping-cart fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-info shadow h-100 py-2 card-hover">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                            客户总数
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">5,689</div>
+                                        <div class="mt-2 text-sm">
+                                            <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 15.3%</span>
+                                            <span class="text-muted">较上月</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-users fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-warning shadow h-100 py-2 card-hover">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                            转化率
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">3.2%</div>
+                                        <div class="mt-2 text-sm">
+                                            <span class="text-danger mr-2"><i class="fa fa-arrow-down"></i> 0.5%</span>
+                                            <span class="text-muted">较上月</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-exchange fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 销售数据大屏 -->
+                <div class="card shadow mb-4 fade-in" style="animation-delay: 0.2s;">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">销售数据大屏</h6>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-sm btn-outline-primary">日</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary active">周</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary">月</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary">年</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="chart-container" style="position: relative; height: 300px;">
+                                    <canvas id="salesChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="chart-container" style="position: relative; height: 300px;">
+                                    <canvas id="categoryChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="export-actions mt-4 justify-content-end">
+                            <button class="btn btn-outline-secondary">
+                                <i class="fa fa-file-pdf-o mr-1"></i> 导出PDF
+                            </button>
+                            <button class="btn btn-outline-secondary">
+                                <i class="fa fa-file-excel-o mr-1"></i> 导出Excel
+                            </button>
+                            <button class="btn btn-outline-secondary">
+                                <i class="fa fa-print mr-1"></i> 打印
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 热销商品 -->
+                <div class="card shadow mb-4 fade-in" style="animation-delay: 0.4s;">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">热销商品</h6>
+                        <div class="dropdown no-arrow">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-filter mr-1"></i> 筛选
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuButton">
+                                <div class="dropdown-header">筛选条件:</div>
+                                <a class="dropdown-item" href="#">今日</a>
+                                <a class="dropdown-item" href="#">本周</a>
+                                <a class="dropdown-item" href="#">本月</a>
+                                <a class="dropdown-item" href="#">本季度</a>
+                                <a class="dropdown-item" href="#">本年</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>商品ID</th>
+                                        <th>商品名称</th>
+                                        <th>分类</th>
+                                        <th>销量</th>
+                                        <th>销售额</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>P001</td>
+                                        <td>智能手机 Pro Max</td>
+                                        <td>电子设备</td>
+                                        <td>1,245</td>
+                                        <td>¥4,258,500</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">查看详情</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>P002</td>
+                                        <td>无线蓝牙耳机</td>
+                                        <td>电子配件</td>
+                                        <td>2,368</td>
+                                        <td>¥1,184,000</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">查看详情</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>P003</td>
+                                        <td>智能手表 Series 5</td>
+                                        <td>智能设备</td>
+                                        <td>856</td>
+                                        <td>¥1,540,800</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">查看详情</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>P004</td>
+                                        <td>笔记本电脑 Air</td>
+                                        <td>电子设备</td>
+                                        <td>654</td>
+                                        <td>¥3,924,000</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">查看详情</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>P005</td>
+                                        <td>平板电脑 Pro</td>
+                                        <td>电子设备</td>
+                                        <td>789</td>
+                                        <td>¥3,156,000</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">查看详情</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 客户分析 -->
+                <div class="card shadow mb-4 fade-in" style="animation-delay: 0.6s;">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">客户分析</h6>
+                        <div class="dropdown no-arrow">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-filter mr-1"></i> 筛选
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuButton2">
+                                <div class="dropdown-header">客户类型:</div>
+                                <a class="dropdown-item" href="#">新客户</a>
+                                <a class="dropdown-item" href="#">老客户</a>
+                                <a class="dropdown-item" href="#">VIP客户</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="chart-container" style="position: relative; height: 300px;">
+                                    <canvas id="customerAgeChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="chart-container" style="position: relative; height: 300px;">
+                                    <canvas id="customerRegionChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 自定义报表 -->
+                <div class="card shadow mb-4 fade-in" style="animation-delay: 0.8s;">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">自定义报表</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="report-builder">
+                            <div class="row">
+                                <div class="col-lg-6 mb-3">
+                                    <label class="form-label">选择指标</label>
+                                    <select multiple class="form-control" size="8">
+                                        <option>销售额</option>
+                                        <option>订单量</option>
+                                        <option>客户数</option>
+                                        <option>客单价</option>
+                                        <option>转化率</option>
+                                        <option>退货率</option>
+                                        <option>复购率</option>
+                                        <option>营销费用</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">时间范围</label>
+                                        <div class="date-picker">
+                                            <input type="date" class="form-control" value="2025-01-01">
+                                            <span class="align-self-center">至</span>
+                                            <input type="date" class="form-control" value="2025-05-22">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">图表类型</label>
+                                        <select class="form-control">
+                                            <option>折线图</option>
+                                            <option>柱状图</option>
+                                            <option>饼图</option>
+                                            <option>雷达图</option>
+                                            <option>表格</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">数据筛选</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="filterCategory">
+                                            <label class="form-check-label" for="filterCategory">
+                                                按商品分类
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="filterRegion">
+                                            <label class="form-check-label" for="filterRegion">
+                                                按地区
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="filterMember">
+                                            <label class="form-check-label" for="filterMember">
+                                                按会员等级
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-end">
+                                <button class="btn btn-primary">
+                                    <i class="fa fa-bar-chart mr-1"></i> 生成报表
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 引入Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <!-- 引入Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 初始化图表和交互
+        document.addEventListener('DOMContentLoaded', function() {
+            // 销售趋势图表
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            new Chart(salesCtx, {
+                type: 'line',
+                data: {
+                    labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+                    datasets: [
+                        {
+                            label: '销售额(万元)',
+                            data: [120, 190, 180, 210, 240, 320, 350],
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: '订单量',
+                            data: [1200, 1850, 1750, 2050, 2300, 3100, 3400],
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                            tension: 0.3,
+                            fill: true,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '销售额(万元)'
+                            }
+                        },
+                        y1: {
+                            beginAtZero: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: '订单量'
+                            },
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // 商品分类图表
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            new Chart(categoryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['电子设备', '电子配件', '智能设备', '家居用品', '其他'],
+                    datasets: [{
+                        data: [45, 25, 15, 10, 5],
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+            
+            // 客户年龄分布图表
+            const customerAgeCtx = document.getElementById('customerAgeChart').getContext('2d');
+            new Chart(customerAgeCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['18-25', '26-30', '31-35', '36-40', '41-45', '46以上'],
+                    datasets: [{
+                        label: '客户数量',
+                        data: [1200, 1900, 2300, 1800, 1500, 800],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)',
+                            'rgba(255, 159, 64, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // 客户地区分布图表
+            const customerRegionCtx = document.getElementById('customerRegionChart').getContext('2d');
+            new Chart(customerRegionCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['北京', '上海', '广州', '深圳', '杭州', '其他'],
+                    datasets: [{
+                        data: [25, 20, 15, 12, 8, 20],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)',
+                            'rgba(255, 159, 64, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+            
+            // 日期选择器交互
+            document.querySelectorAll('.date-picker input').forEach(input => {
+                input.addEventListener('change', function() {
+                    // 这里可以添加日期选择后的处理逻辑
+                    console.log('日期已更新:', this.value);
+                });
+            });
+            
+            // 导出按钮动画
+            document.querySelectorAll('.export-actions button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const originalHtml = this.innerHTML;
+                    this.innerHTML = '<i class="fa fa-spinner fa-spin mr-1"></i> 处理中...';
+                    this.disabled = true;
+                    
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fa fa-check mr-1"></i> 已完成';
+                        this.classList.remove('btn-outline-secondary');
+                        this.classList.add('btn-success');
+                        
+                        setTimeout(() => {
+                            this.innerHTML = originalHtml;
+                            this.disabled = false;
+                            this.classList.remove('btn-success');
+                            this.classList.add('btn-outline-secondary');
+                        }, 2000);
+                    }, 1500);
+                });
+            });
+            
+            // 自定义报表生成按钮
+            document.querySelector('.report-builder .btn-primary').addEventListener('click', function() {
+                this.innerHTML = '<i class="fa fa-spinner fa-spin mr-1"></i> 生成中...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fa fa-check mr-1"></i> 已生成';
+                    this.classList.remove('btn-primary');
+                    this.classList.add('btn-success');
+                    
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fa fa-bar-chart mr-1"></i> 生成报表';
+                        this.disabled = false;
+                        this.classList.remove('btn-success');
+                        this.classList.add('btn-primary');
+                    }, 2000);
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

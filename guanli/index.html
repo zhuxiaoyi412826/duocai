@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多彩电商管理后台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        /* 顶部导航栏样式 */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: #1890ff;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .header-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .notification {
+            position: relative;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #f5222d;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-box {
+            margin-right: 20px;
+        }
+
+        .search-box input {
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: none;
+            outline: none;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #fff;
+            color: #1890ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+
+        /* 左侧菜单样式 */
+        .sidebar {
+            width: 220px;
+            background-color: #fff;
+            position: fixed;
+            top: 60px;
+            bottom: 0;
+            left: 0;
+            overflow-y: auto;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .menu-item:hover {
+            background-color: #e6f7ff;
+        }
+
+        .menu-item.active {
+            background-color: #e6f7ff;
+            border-right: 3px solid #1890ff;
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .submenu {
+            list-style: none;
+            background-color: #fafafa;
+            display: none;
+        }
+
+        .submenu.show {
+            display: block;
+        }
+
+        .submenu-item {
+            padding: 10px 20px 10px 50px;
+            cursor: pointer;
+        }
+
+        .submenu-item:hover {
+            background-color: #e6f7ff;
+        }
+
+        .submenu-item.active {
+            color: #1890ff;
+        }
+
+        /* 主内容区样式 */
+        .main-content {
+            flex: 1;
+            margin-left: 220px;
+            margin-top: 60px;
+            padding: 20px;
+            background-color: #f5f5f5;
+            min-height: calc(100vh - 60px);
+        }
+
+        .page-header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background-color: #1890ff;
+            color: white;
+        }
+
+        .btn-default {
+            background-color: #fff;
+            border: 1px solid #d9d9d9;
+        }
+
+        /* 商品表格样式 */
+        .table-container {
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .table-toolbar {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .table-search {
+            display: flex;
+            align-items: center;
+        }
+
+        .table-search select {
+            padding: 6px 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        th {
+            background-color: #fafafa;
+            font-weight: 500;
+        }
+
+        tr:hover {
+            background-color: #fafafa;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .status-on {
+            background-color: #f6ffed;
+            color: #52c41a;
+            border: 1px solid #b7eb8f;
+        }
+
+        .status-off {
+            background-color: #fff2f0;
+            color: #ff4d4f;
+            border: 1px solid #ffccc7;
+        }
+
+        .action-btn {
+            color: #1890ff;
+            cursor: pointer;
+            margin-right: 8px;
+        }
+
+        .action-btn.delete {
+            color: #ff4d4f;
+        }
+
+        .add-btn {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #1890ff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="header">
+        <div class="logo">
+            <img src="img/logo.svg" alt="Logo">
+            <h1>多彩电商管理后台</h1>
+        </div>
+        <div class="header-right">
+            <div class="search-box">
+                <input type="text" placeholder="搜索订单/商品/客户...">
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <span>管理员</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 左侧菜单栏 -->
+    <aside class="sidebar">
+        <ul class="menu">
+
+            <div class="menu-item" onclick="navigateTo('shop.html')">
+                <span>📦</span>
+                <span>商品管理</span>
+            </div>
+            <!-- 其他菜单项... -->
+            <li class="menu-item" onclick="window.location.href='dashboard.html'">
+                <span>📊</span>
+                <span>数据看板</span>
+            </li>
+            <li class="menu-item" onclick="navigateTo('order.html')">
+                <span>📋</span>
+                <span>订单管理</span>
+            </li>
+            <li class="menu-item" onclick="navigateTo('marketing.html')">
+                <span>🎯</span>
+                <span>营销管理</span>
+            </li>
+            <li class="menu-item" onclick="navigateTo('stock.html')">
+                <span>📦</span>
+                <span>库存管理</span>
+            </li>
+            <ul class="submenu">
+                <li class="submenu-item" onclick="navigateTo('stock.html#alert')">库存看板</li>
+                <li class="submenu-item" onclick="navigateTo('stock.html#log')">库存记录</li>
+                <li class="submenu-item" onclick="navigateTo('stock.html#check')">库存盘点</li>
+            </ul>
+            <li class="menu-item" onclick="navigateTo('data-analysis.html')">
+                <span>📈</span>
+                <span>数据分析</span>
+            </li>
+            <ul class="submenu">
+                <li class="submenu-item" onclick="navigateTo('data-analysis.html')">销售大屏</li>
+                <li class="submenu-item" onclick="navigateTo('data-analysis.html#report')">自定义报表</li>
+            </ul>
+            <li class="menu-item" onclick="navigateTo('shop-management.html')">
+                <span>🏪</span>
+                <span>店铺管理</span>
+            </li>
+            <ul class="submenu">
+                <li class="submenu-item" onclick="navigateTo('shop-management.html#basic')">基础信息</li>
+                <li class="submenu-item" onclick="navigateTo('shop-management.html#decoration')">店铺装修</li>
+                <li class="submenu-item" onclick="navigateTo('shop-management.html#nav')">导航菜单</li>
+            </ul>
+
+            <li class="menu-item" onclick="navigateTo('permission-management.html')">
+                <span>🔒</span>
+                <span>权限管理</span>
+            </li>
+            <ul class="submenu">
+                <li class="submenu-item" onclick="navigateTo('permission-management.html#roles')">角色管理</li>
+                <li class="submenu-item" onclick="navigateTo('permission-management.html#users')">用户账号</li>
+            </ul>
+
+            <li class="menu-item" onclick="navigateTo('supplier-management.html')">
+                <span>🏭</span>
+                <span>供应商管理</span>
+            </li>
+            <ul class="submenu">
+                <li class="submenu-item" onclick="navigateTo('supplier-management.html#list')">供应商列表</li>
+                <li class="submenu-item" onclick="navigateTo('supplier-management.html#orders')">采购订单</li>
+            </ul>
+            <li class="menu-item" onclick="navigateTo('finance.html')">
+                <span>💰</span>
+                <span>财务管理</span>
+            </li>
+            <ul class="submenu">
+                <li class="submenu-item" onclick="navigateTo('finance.html#income')">收支管理</li>
+                <li class="submenu-item" onclick="navigateTo('finance.html#invoice')">发票管理</li>
+            </ul>
+            <li class="menu-item" onclick="navigateTo('content.html')">
+                <span>📝</span>
+                <span>内容管理</span>
+            </li>
+            <ul class="submenu">
+                <li class="submenu-item" onclick="navigateTo('content.html#articles')">文章/视频</li>
+                <li class="submenu-item" onclick="navigateTo('content.html#comments')">评论管理</li>
+            </ul>
+            <li class="menu-item" onclick="navigateTo('aftersale.html')">
+                <span>🔄</span>
+                <span>售后管理</span>
+            </li>
+            <ul class="submenu">
+                <li class="submenu-item" onclick="navigateTo('aftersale.html#returns')">退货/退款</li>
+                <li class="submenu-item" onclick="navigateTo('aftersale.html#disputes')">纠纷处理</li>
+            </ul>
+            <li class="menu-item" onclick="navigateTo('system-settings.html')">
+                <span>⚙️</span>
+                <span>系统设置</span>
+            </li>
+            <ul class="submenu">
+                <li class="submenu-item" onclick="navigateTo('system-settings.html#role')">角色权限</li>
+                <li class="submenu-item" onclick="navigateTo('system-settings.html#shop')">店铺设置</li>
+                <li class="submenu-item" onclick="navigateTo('system-settings.html#backup')">数据备份</li>
+            </ul>
+        </ul>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <div class="page-header">
+            <h2 class="page-title">商品列表</h2>
+            <div class="action-buttons">
+                <button class="btn btn-default">导出</button>
+                <button class="btn btn-default">批量操作</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-toolbar">
+                <div class="table-search">
+                    <select>
+                        <option>全部分类</option>
+                        <option>电子产品</option>
+                        <option>服装</option>
+                        <option>食品</option>
+                    </select>
+                    <select>
+                        <option>全部状态</option>
+                        <option>已上架</option>
+                        <option>已下架</option>
+                    </select>
+                    <input type="text" placeholder="搜索商品名称...">
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox"></th>
+                        <th>商品名称</th>
+                        <th>分类</th>
+                        <th>价格</th>
+                        <th>库存</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>iPhone 13 Pro Max</td>
+                        <td>电子产品</td>
+                        <td>¥8999</td>
+                        <td>120</td>
+                        <td><span class="status status-on">已上架</span></td>
+                        <td>
+                            <span class="action-btn">编辑</span>
+                            <span class="action-btn delete">删除</span>
+                            <span class="action-btn">下架</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>MacBook Pro 14寸</td>
+                        <td>电子产品</td>
+                        <td>¥12999</td>
+                        <td>85</td>
+                        <td><span class="status status-on">已上架</span></td>
+                        <td>
+                            <span class="action-btn">编辑</span>
+                            <span class="action-btn delete">删除</span>
+                            <span class="action-btn">下架</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>男士休闲衬衫</td>
+                        <td>服装</td>
+                        <td>¥199</td>
+                        <td>256</td>
+                        <td><span class="status status-on">已上架</span></td>
+                        <td>
+                            <span class="action-btn">编辑</span>
+                            <span class="action-btn delete">删除</span>
+                            <span class="action-btn">下架</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>进口巧克力礼盒</td>
+                        <td>食品</td>
+                        <td>¥158</td>
+                        <td>0</td>
+                        <td><span class="status status-off">已下架</span></td>
+                        <td>
+                            <span class="action-btn">编辑</span>
+                            <span class="action-btn delete">删除</span>
+                            <span class="action-btn">上架</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="add-btn">+</div>
+    </main>
+
+    <script>
+        // 通用导航函数
+        function navigateTo(page) {
+            if (page.includes('#')) {
+                const [path, anchor] = page.split('#');
+                window.location.href = path;
+                // 页面加载后滚动到锚点
+                window.addEventListener('load', () => {
+                    document.getElementById(anchor)?.scrollIntoView();
+                });
+            } else {
+                window.location.href = page;
+            }
+        }
+
+        // 页面加载时初始化菜单状态
+        document.addEventListener('DOMContentLoaded', function () {
+            // 商品管理菜单默认激活
+            const productMenu = document.querySelector('.menu-item:nth-child(2)');
+            if (productMenu) {
+                productMenu.classList.add('active');
+                const submenu = productMenu.nextElementSibling;
+                if (submenu && submenu.classList.contains('submenu')) {
+                    submenu.classList.add('show');
+                    submenu.querySelector('.submenu-item').classList.add('active');
+                }
+            }
+
+            // 菜单折叠功能
+            const menuItems = document.querySelectorAll('.menu-item');
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    // 移除所有active类
+                    document.querySelectorAll('.menu-item').forEach(i => {
+                        i.classList.remove('active');
+                    });
+                    document.querySelectorAll('.submenu-item').forEach(i => {
+                        i.classList.remove('active');
+                    });
+
+                    // 给当前点击的菜单项添加active类
+                    this.classList.add('active');
+
+                    // 切换子菜单显示
+                    const submenu = this.nextElementSibling;
+                    if (submenu && submenu.classList.contains('submenu')) {
+                        document.querySelectorAll('.submenu').forEach(sm => {
+                            sm.classList.remove('show');
+                        });
+                        submenu.classList.add('show');
+                    }
+                });
+            });
+
+            // 子菜单项点击
+            const submenuItems = document.querySelectorAll('.submenu-item');
+            submenuItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    submenuItems.forEach(i => {
+                        i.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+
+            // 添加商品按钮点击
+            document.querySelector('.add-btn').addEventListener('click', function () {
+                alert('添加商品功能待实现');
+            });
+
+            // 表格操作按钮功能
+            document.querySelectorAll('.action-btn').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const action = this.textContent.trim();
+                    const row = this.closest('tr');
+                    const productName = row.querySelector('td:nth-child(2)').textContent;
+
+                    if (action === '编辑') {
+                        alert(`即将编辑商品: ${productName}`);
+                    } else if (action === '删除') {
+                        if (confirm(`确定要删除商品: ${productName} 吗?`)) {
+                            row.remove();
+                        }
+                    } else if (action === '上架' || action === '下架') {
+                        const statusCell = row.querySelector('.status');
+                        if (action === '上架') {
+                            statusCell.textContent = '已上架';
+                            statusCell.className = 'status status-on';
+                            this.textContent = '下架';
+                        } else {
+                            statusCell.textContent = '已下架';
+                            statusCell.className = 'status status-off';
+                            this.textContent = '上架';
+                        }
+                    }
+                });
+            });
+
+            // 批量操作按钮
+            document.querySelector('.btn-default:last-child').addEventListener('click', function () {
+                const selectedRows = document.querySelectorAll('tbody tr input[type="checkbox"]:checked');
+                if (selectedRows.length === 0) {
+                    alert('请先选择商品');
+                    return;
+                }
+                alert(`将对 ${selectedRows.length} 个商品执行批量操作`);
+            });
+
+            // 搜索功能
+            document.querySelector('.table-search input').addEventListener('input', function () {
+                const searchText = this.value.toLowerCase();
+                document.querySelectorAll('tbody tr').forEach(row => {
+                    const productName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                    row.style.display = productName.includes(searchText) ? '' : 'none';
+                });
+            });
+
+            // 筛选功能
+            document.querySelectorAll('.table-search select').forEach(select => {
+                select.addEventListener('change', function () {
+                    const filterType = this.parentElement === document.querySelector('.table-search') ? 'category' : 'status';
+                    const filterValue = this.value;
+
+                    document.querySelectorAll('tbody tr').forEach(row => {
+                        const rowValue = filterType === 'category'
+                            ? row.querySelector('td:nth-child(3)').textContent
+                            : row.querySelector('.status').textContent;
+
+                        row.style.display = (filterValue === '全部' || rowValue === filterValue) ? '' : 'none';
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统设置 - 多彩电商管理后台</title>
+    <!-- Bootstrap CSS -->
+    <link href="bootstrap5.13/css/bootstrap-grid.min.css" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .admin-sidebar {
+            min-width: 250px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .sidebar-link {
+            color: #6c757d;
+            transition: all 0.3s ease;
+        }
+        .sidebar-link.active,
+        .sidebar-link:hover {
+            color: #1890ff;
+            background-color: #e6f7ff;
+        }
+        .main-content {
+            margin-left: 250px;
+        }
+        .page-header {
+            padding: 2rem 2rem 1rem;
+        }
+        .settings-tabs {
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 2rem;
+        }
+        .tab {
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .tab.active {
+            color: #1890ff;
+            border-bottom: 3px solid #1890ff;
+        }
+        .settings-content {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            padding: 2rem;
+        }
+        .role-item {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .role-item:hover {
+            background-color: #f0f9ff;
+        }
+        .permission-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-check-label {
+            font-size: 0.95rem;
+            color: #495057;
+        }
+        .btn-primary {
+            background-color: #1890ff;
+            border-color: #1890ff;
+        }
+        .btn-primary:hover {
+            background-color: #096dd9;
+            border-color: #096dd9;
+        }
+        .backup-record {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+   
+
+    <!-- 左侧边栏 -->
+    <div class="admin-sidebar position-fixed top-0 start-0 h-100">
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action sidebar-link">
+                <i class="bi bi-speedometer2 me-2"></i> 数据概览
+            </a>
+            <a href="#" class="list-group-item list-group-item-action sidebar-link">
+                <i class="bi bi-box-seam me-2"></i> 商品管理
+            </a>
+            <a href="#" class="list-group-item list-group-item-action sidebar-link">
+                <i class="bi bi-file-earmark-check me-2"></i> 订单管理
+            </a>
+            <a href="#" class="list-group-item list-group-item-action sidebar-link active">
+                <i class="bi bi-gear me-2"></i> 系统设置
+            </a>
+            <a href="#" class="list-group-item list-group-item-action sidebar-link">
+                <i class="bi bi-people me-2"></i> 客户管理
+            </a>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <main class="main-content p-4">
+        <div class="page-header">
+            <h1 class="h3 mb-0 fw-bold text-dark">系统设置</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">首页</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">系统设置</li>
+                </ol>
+            </nav>
+        </div>
+
+        <!-- 选项卡导航 -->
+        <div class="settings-tabs">
+            <div class="tab active" data-bs-target="#roleTab" data-bs-toggle="tab">角色权限</div>
+            <div class="tab" data-bs-target="#shopTab" data-bs-toggle="tab">店铺设置</div>
+            <div class="tab" data-bs-target="#backupTab" data-bs-toggle="tab">数据备份</div>
+        </div>
+
+        <!-- 选项卡内容 -->
+        <div class="tab-content">
+            <!-- 角色权限 -->
+            <div class="tab-pane fade show active" id="roleTab">
+                <div class="settings-content">
+                    <h2 class="h5 mb-3 fw-bold text-dark">角色权限管理</h2>
+                    <div class="row g-4">
+                        <!-- 角色列表 -->
+                        <div class="col-md-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-light">
+                                    <h3 class="h6 mb-0 fw-bold">角色列表</h3>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="list-group">
+                                        <div class="list-group-item d-flex justify-content-between align-items-center role-item">
+                                            超级管理员
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input">
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item d-flex justify-content-between align-items-center role-item">
+                                            商品管理员
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input">
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item d-flex justify-content-between align-items-center role-item">
+                                            订单管理员
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input">
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item d-flex justify-content-between align-items-center role-item">
+                                            客服人员
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer bg-white border-top-0 text-end">
+                                        <button class="btn btn-primary">添加角色</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 权限分配 -->
+                        <div class="col-md-8">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-light">
+                                    <h3 class="h6 mb-0 fw-bold">权限分配</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="permission-group">
+                                        <h4 class="h6 mb-2 fw-bold text-muted">核心权限</h4>
+                                        <div class="form-check mb-2">
+                                            <input type="checkbox" class="form-check-input" id="corePermission1">
+                                            <label class="form-check-label" for="corePermission1">
+                                                商品管理权限 <span class="text-muted small">（新增/编辑/删除商品）</span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input type="checkbox" class="form-check-input" id="corePermission2">
+                                            <label class="form-check-label" for="corePermission2">
+                                                订单管理权限 <span class="text-muted small">（处理订单/发货/退款）</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="permission-group">
+                                        <h4 class="h6 mb-2 fw-bold text-muted">扩展权限</h4>
+                                        <div class="form-check mb-2">
+                                            <input type="checkbox" class="form-check-input" id="extendPermission1">
+                                            <label class="form-check-label" for="extendPermission1">
+                                                客户信息查看 <span class="text-muted small">（查看客户基本信息）</span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input type="checkbox" class="form-check-input" id="extendPermission2">
+                                            <label class="form-check-label" for="extendPermission2">
+                                                数据导出权限 <span class="text-muted small">（导出销售数据报表）</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 店铺设置 -->
+            <div class="tab-pane fade" id="shopTab">
+                <div class="settings-content">
+                    <h2 class="h5 mb-3 fw-bold text-dark">店铺基础设置</h2>
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="shopName" value="多彩电商">
+                                    <label for="shopName">店铺名称</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" id="shopEmail" value="service@example.com">
+                                    <label for="shopEmail">联系邮箱</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea class="form-control" id="shopDesc" rows="3">多彩电商，品质保证</textarea>
+                                    <label for="shopDesc">店铺简介</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">保存设置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 数据备份 -->
+            <div class="tab-pane fade" id="backupTab">
+                <div class="settings-content">
+                    <h2 class="h5 mb-3 fw-bold text-dark">数据备份与恢复</h2>
+                    <div class="mb-3">
+                        <button class="btn btn-primary me-2">
+                            <i class="bi bi-cloud-download me-1"></i> 立即备份
+                        </button>
+                        <button class="btn btn-danger">
+                            <i class="bi bi-cloud-upload me-1"></i> 恢复数据
+                        </button>
+                    </div>
+                    
+                    <div class="backup-list">
+                        <h3 class="h6 mb-3 fw-bold text-muted">最近备份记录</h3>
+                        <div class="backup-record">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="fw-bold">备份ID：#B202308151430</span><br>
+                                    <span class="text-muted small">创建时间：2023-08-15 14:30:00</span>
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-primary me-1">详情</button>
+                                    <button class="btn btn-sm btn-danger">删除</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="backup-record">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="fw-bold">备份ID：#B202308141500</span><br>
+                                    <span class="text-muted small">创建时间：2023-08-14 15:00:00</span>
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-primary me-1">详情</button>
+                                    <button class="btn btn-sm btn-danger">删除</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="bootstrap5.13/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 选项卡自动激活
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeTab = urlParams.get('tab') || 'role';
+            const tabElement = document.querySelector(`[data-bs-target="#@${activeTab}Tab"]`);
+            
+            if (tabElement) {
+                new bootstrap.Tab(tabElement).show();
+            }
+        });
+    </script>
+</body>
+</html>

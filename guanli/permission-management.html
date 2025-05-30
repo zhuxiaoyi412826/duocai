@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>权限管理 - 多彩电商</title>
+    <!-- Bootstrap 3.1.5 核心样式 -->
+    <link rel="stylesheet" href="bootstrap5.13/css/bootstrap.min.css">
+    <!-- 自定义样式 -->
+    <style>
+        body { padding-top: 50px; } /* 预留导航栏空间 */
+        .main-content { padding: 20px; }
+        .role-list { border-right: 1px solid #eee; min-height: 300px; }
+        .permission-category { margin-bottom: 25px; }
+        .permission-item { margin: 8px 0; }
+        .list-group-item.active {
+            background-color: #428bca;
+            border-color: #428bca;
+            color: white;
+        }
+        .panel-heading {
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #eee;
+            padding: 10px 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">多彩电商管理后台</a>
+            </div>
+            <div class="navbar-right">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="glyphicon glyphicon-user"></i> 管理员 <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">账户设置</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">退出登录</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 左侧边栏（折叠效果） -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">角色管理</div>
+                    <div class="panel-body">
+                        <div class="list-group">
+                            <a href="#" class="list-group-item active">
+                                <i class="glyphicon glyphicon-star"></i> 超级管理员
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <i class="glyphicon glyphicon-th-list"></i> 商品管理员
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <i class="glyphicon glyphicon-shopping-cart"></i> 订单管理员
+                            </a>
+                        </div>
+                        <button class="btn btn-primary btn-block mt-2">
+                            <i class="glyphicon glyphicon-plus"></i> 添加角色
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主内容区 -->
+            <div class="col-sm-9">
+                <h2 class="page-header">权限管理 <small>角色权限分配</small></h2>
+
+                <!-- 权限分配面板 -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">当前角色：<span class="text-primary">超级管理员</span></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- 商品管理权限 -->
+                                <div class="permission-category">
+                                    <h4>商品管理 <small class="text-muted">基础权限</small></h4>
+                                    <div class="permission-item">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" checked> 商品上下架
+                                        </label>
+                                    </div>
+                                    <div class="permission-item">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox"> 商品库存修改
+                                        </label>
+                                    </div>
+                                    <div class="permission-item">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox"> 商品分类管理
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- 订单管理权限 -->
+                                <div class="permission-category">
+                                    <h4>订单管理 <small class="text-muted">核心权限</small></h4>
+                                    <div class="permission-item">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" checked> 订单处理
+                                        </label>
+                                    </div>
+                                    <div class="permission-item">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox"> 退款审核
+                                        </label>
+                                    </div>
+                                    <div class="permission-item">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox"> 物流信息修改
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 高级权限 -->
+                        <div class="permission-category">
+                            <h4>系统设置 <small class="text-muted">敏感权限</small></h4>
+                            <div class="permission-item">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox"> 角色创建与删除
+                                </label>
+                            </div>
+                            <div class="permission-item">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox"> 数据备份与恢复
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 操作按钮 -->
+                        <div class="mt-3">
+                            <button class="btn btn-primary">
+                                <i class="glyphicon glyphicon-floppy-disk"></i> 保存权限
+                            </button>
+                            <button class="btn btn-warning">
+                                <i class="glyphicon glyphicon-undo"></i> 重置为默认
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/twitter-bootstrap@3.1.5/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

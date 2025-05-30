@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>营销管理 - 多彩电商管理后台</title>
+    <!-- 引入Bootstrap CSS -->
+    <link href="bootstrap5.13/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        /* 自定义样式 */
+        .sidebar {
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+        
+        .sidebar-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #e9ecef;
+        }
+        
+        .sidebar-link.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        
+        .content {
+            padding: 1.5rem;
+        }
+        
+        .card-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        /* 营销管理特有样式 */
+        .date-picker {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .coupon-batch {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .member-table td {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏导航 -->
+            <div class="col-md-3 col-lg-2 sidebar d-none d-md-block">
+                <div class="p-4">
+                    <h5 class="fw-bold text-primary">多彩电商</h5>
+                    <hr>
+                    <nav>
+                        <a href="#" class="sidebar-link"><i class="fa fa-tachometer mr-2"></i> 控制台</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-store mr-2"></i> 店铺管理</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-cubes mr-2"></i> 商品管理</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-shopping-cart mr-2"></i> 订单管理</a>
+                        <a href="#" class="sidebar-link active"><i class="fa fa-bullhorn mr-2"></i> 营销管理</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-users mr-2"></i> 客户管理</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-bar-chart mr-2"></i> 数据分析</a>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- 主内容区域 -->
+            <div class="col-md-9 col-lg-10 content">
+                <!-- 顶部导航栏 -->
+                <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow-sm mb-4">
+                    <div class="container-fluid">
+                        <button class="btn btn-outline-primary d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarToggle" aria-controls="sidebarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <div class="collapse navbar-collapse" id="sidebarToggle">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="#">营销管理</a>
+                                </li>
+                            </ul>
+                            <div class="d-flex">
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-user mr-1"></i> 管理员
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                        <li><a class="dropdown-item" href="#">个人资料</a></li>
+                                        <li><a class="dropdown-item" href="#">设置</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="#">退出登录</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                
+                <!-- 页面标题和操作按钮 -->
+                <div class="d-flex justify-content-between align-items-center mb-4 fade-in">
+                    <h1 class="h3 mb-0 text-gray-800">营销管理</h1>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-primary" id="exportBtn">
+                            <i class="fa fa-download mr-1"></i> 导出数据
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" id="refreshBtn">
+                            <i class="fa fa-refresh mr-1"></i> 刷新
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 营销管理卡片 -->
+                <div class="row mb-4">
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2 card-hover">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            活动总数
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">24</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-calendar fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-success shadow h-100 py-2 card-hover">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                            优惠券总数
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">1,254</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-ticket fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-info shadow h-100 py-2 card-hover">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                            会员总数
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">5,689</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-users fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-warning shadow h-100 py-2 card-hover">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                            营销支出
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">¥28,645</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-line-chart fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 营销管理选项卡 -->
+                <div class="card shadow mb-4 fade-in" style="animation-delay: 0.2s;">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs" id="marketingTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="promotion-tab" data-bs-toggle="tab" data-bs-target="#promotion" type="button" role="tab">促销活动</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="coupon-tab" data-bs-toggle="tab" data-bs-target="#coupon" type="button" role="tab">优惠券管理</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="member-tab" data-bs-toggle="tab" data-bs-target="#member" type="button" role="tab">会员等级</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="analysis-tab" data-bs-toggle="tab" data-bs-target="#analysis" type="button" role="tab">营销分析</button>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="tab-content" id="marketingTabsContent">
+                            <!-- 促销活动选项卡 -->
+                            <div class="tab-pane fade show active" id="promotion" role="tabpanel">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h4 class="mb-0">促销活动管理</h4>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPromotionModal">
+                                        <i class="fa fa-plus mr-1"></i> 创建活动
+                                    </button>
+                                </div>
+                                
+                                <!-- 促销活动表格 -->
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>活动ID</th>
+                                                <th>活动名称</th>
+                                                <th>活动类型</th>
+                                                <th>开始时间</th>
+                                                <th>结束时间</th>
+                                                <th>状态</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>P001</td>
+                                                <td>618大促</td>
+                                                <td>满减活动</td>
+                                                <td>2025-06-01</td>
+                                                <td>2025-06-20</td>
+                                                <td><span class="badge bg-warning">即将开始</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">编辑</button>
+                                                    <button class="btn btn-sm btn-outline-danger">删除</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>P002</td>
+                                                <td>周年庆特惠</td>
+                                                <td>折扣活动</td>
+                                                <td>2025-05-15</td>
+                                                <td>2025-05-25</td>
+                                                <td><span class="badge bg-success">进行中</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">编辑</button>
+                                                    <button class="btn btn-sm btn-outline-danger">删除</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>P003</td>
+                                                <td>新用户专享</td>
+                                                <td>赠品活动</td>
+                                                <td>2025-05-01</td>
+                                                <td>2025-05-31</td>
+                                                <td><span class="badge bg-success">进行中</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">编辑</button>
+                                                    <button class="btn btn-sm btn-outline-danger">删除</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>P004</td>
+                                                <td>五一特惠</td>
+                                                <td>满减活动</td>
+                                                <td>2025-04-28</td>
+                                                <td>2025-05-05</td>
+                                                <td><span class="badge bg-secondary">已结束</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">查看</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <!-- 创建促销活动模态框 -->
+                                <div class="modal fade" id="createPromotionModal" tabindex="-1" aria-labelledby="createPromotionModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="createPromotionModalLabel">创建促销活动</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="mb-3">
+                                                        <label for="promotionName" class="form-label">活动名称</label>
+                                                        <input type="text" class="form-control" id="promotionName" placeholder="例如：618大促">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">活动时间</label>
+                                                        <div class="date-picker">
+                                                            <input type="datetime-local" class="form-control">
+                                                            <span class="align-self-center">至</span>
+                                                            <input type="datetime-local" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="promotionType" class="form-label">活动类型</label>
+                                                        <select class="form-control" id="promotionType">
+                                                            <option>满减活动</option>
+                                                            <option>折扣活动</option>
+                                                            <option>赠品活动</option>
+                                                            <option>限时秒杀</option>
+                                                            <option>团购活动</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">活动规则</label>
+                                                        <textarea class="form-control" rows="4" placeholder="请输入活动规则描述"></textarea>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">参与商品</label>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" placeholder="选择参与活动的商品">
+                                                            <button class="btn btn-outline-secondary" type="button">选择商品</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                <button type="button" class="btn btn-primary">创建活动</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 优惠券管理选项卡 -->
+                            <div class="tab-pane fade" id="coupon" role="tabpanel">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h4 class="mb-0">优惠券管理</h4>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCouponModal">
+                                        <i class="fa fa-plus mr-1"></i> 生成优惠券
+                                    </button>
+                                </div>
+                                
+                                <!-- 优惠券表格 -->
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>优惠券ID</th>
+                                                <th>优惠券类型</th>
+                                                <th>优惠券面值</th>
+                                                <th>发行数量</th>
+                                                <th>已使用</th>
+                                                <th>有效期</th>
+                                                <th>状态</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>C001</td>
+                                                <td>满减券</td>
+                                                <td>满100减20</td>
+                                                <td>500</td>
+                                                <td>120</td>
+                                                <td>2025-05-01至2025-05-31</td>
+                                                <td><span class="badge bg-success">有效</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">编辑</button>
+                                                    <button class="btn btn-sm btn-outline-danger">停用</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>C002</td>
+                                                <td>折扣券</td>
+                                                <td>9折券</td>
+                                                <td>300</td>
+                                                <td>85</td>
+                                                <td>2025-05-10至2025-06-10</td>
+                                                <td><span class="badge bg-success">有效</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">编辑</button>
+                                                    <button class="btn btn-sm btn-outline-danger">停用</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>C003</td>
+                                                <td>免邮券</td>
+                                                <td>全场免邮</td>
+                                                <td>1000</td>
+                                                <td>452</td>
+                                                <td>2025-04-15至2025-05-15</td>
+                                                <td><span class="badge bg-secondary">已过期</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">查看</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <!-- 创建优惠券模态框 -->
+                                <div class="modal fade" id="createCouponModal" tabindex="-1" aria-labelledby="createCouponModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="createCouponModalLabel">生成优惠券</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="mb-3">
+                                                        <label for="couponType" class="form-label">优惠券类型</label>
+                                                        <select class="form-control" id="couponType">
+                                                            <option>满减券</option>
+                                                            <option>折扣券</option>
+                                                            <option>免邮券</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="couponValue" class="form-label">优惠券面值</label>
+                                                        <input type="text" class="form-control" id="couponValue" placeholder="例如：满100减20">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="couponQuantity" class="form-label">生成数量</label>
+                                                        <input type="number" class="form-control" id="couponQuantity" placeholder="例如：100">
+                                                    </div>
+                                                    <div class="coupon-batch">
+                                                        <h5 class="mb-3">批次设置</h5>
+                                                        <div class="mb-3">
+                                                            <label for="couponValidity" class="form-label">有效期</label>
+                                                            <select class="form-control" id="couponValidity">
+                                                                <option>7天</option>
+                                                                <option>15天</option>
+                                                                <option>30天</option>
+                                                                <option>自定义</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3" id="customValidity" style="display: none;">
+                                                            <label class="form-label">自定义有效期</label>
+                                                            <div class="date-picker">
+                                                                <input type="date" class="form-control">
+                                                                <span class="align-self-center">至</span>
+                                                                <input type="date" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="couponLimit" class="form-label">使用限制</label>
+                                                            <select class="form-control" id="couponLimit">
+                                                                <option>无限制</option>
+                                                                <option>新用户专享</option>
+                                                                <option>会员专享</option>
+                                                                <option>指定商品</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                <button type="button" class="btn btn-primary">生成优惠券</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 会员等级选项卡 -->
+                            <div class="tab-pane fade" id="member" role="tabpanel">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h4 class="mb-0">会员等级设置</h4>
+                                    <button type="button" class="btn btn-primary" id="addMemberLevel">
+                                        <i class="fa fa-plus mr-1"></i> 添加等级
+                                    </button>
+                                </div>
+                                
+                                <!-- 会员等级表格 -->
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped member-table">
+                                        <thead>
+                                            <tr>
+                                                <th>等级</th>
+                                                <th>名称</th>
+                                                <th>升级条件</th>
+                                                <th>折扣率</th>
+                                                <th>专属权益</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td><input type="text" class="form-control" value="普通会员"></td>
+                                                <td><input type="text" class="form-control" value="注册成功"></td>
+                                                <td><input type="text" class="form-control" value="无折扣"></td>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="level1-1" checked disabled>
+                                                        <label class="form-check-label" for="level1-1">
+                                                            生日特权
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary save-level">保存</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td><input type="text" class="form-control" value="银卡会员"></td>
+                                                <td><input type="text" class="form-control" value="消费满1000元"></td>
+                                                <td><input type="text" class="form-control" value="95折"></td>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="level2-1" checked disabled>
+                                                        <label class="form-check-label" for="level2-1">
+                                                            生日特权
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="level2-2" checked disabled>
+                                                        <label class="form-check-label" for="level2-2">
+                                                            优先发货
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary save-level">保存</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td><input type="text" class="form-control" value="金卡会员"></td>
+                                                <td><input type="text" class="form-control" value="消费满5000元"></td>
+                                                <td><input type="text" class="form-control" value="9折"></td>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="level3-1" checked disabled>
+                                                        <label class="form-check-label" for="level3-1">
+                                                            生日特权
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="level3-2" checked disabled>
+                                                        <label class="form-check-label" for="level3-2">
+                                                            优先发货
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="level3-3" checked disabled>
+                                                        <label class="form-check-label" for="level3-3">
+                                                            专属客服
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary save-level">保存</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- 营销分析选项卡 -->
+                            <div class="tab-pane fade" id="analysis" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-lg-6 mb-4">
+                                        <div class="card shadow">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">营销活动效果</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="chart-container" style="position: relative; height: 300px;">
+                                                    <canvas id="promotionChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-6 mb-4">
+                                        <div class="card shadow">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">优惠券使用情况</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="chart-container" style="position: relative; height: 300px;">
+                                                    <canvas id="couponChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-12 mb-4">
+                                        <div class="card shadow">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">会员消费分析</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="chart-container" style="position: relative; height: 300px;">
+                                                    <canvas id="memberChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 引入Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <!-- 引入Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 初始化动画
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加淡入动画效果
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+            
+            // 优惠券有效期选择
+            document.getElementById('couponValidity').addEventListener('change', function() {
+                const customValidity = document.getElementById('customValidity');
+                if (this.value === '自定义') {
+                    customValidity.style.display = 'block';
+                } else {
+                    customValidity.style.display = 'none';
+                }
+            });
+            
+            // 保存会员等级按钮
+            document.querySelectorAll('.save-level').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    const level = row.querySelector('td:first-child').textContent;
+                    const name = row.querySelector('input').value;
+                    
+                    // 显示保存成功提示
+                    this.innerHTML = '<i class="fa fa-check mr-1"></i> 已保存';
+                    this.classList.remove('btn-outline-primary');
+                    this.classList.add('btn-outline-success');
+                    
+                    setTimeout(() => {
+                        this.innerHTML = '保存';
+                        this.classList.remove('btn-outline-success');
+                        this.classList.add('btn-outline-primary');
+                    }, 2000);
+                });
+            });
+            
+            // 添加新会员等级按钮
+            document.getElementById('addMemberLevel').addEventListener('click', function() {
+                const table = document.querySelector('.member-table tbody');
+                const newLevel = table.children.length + 1;
+                
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${newLevel}</td>
+                    <td><input type="text" class="form-control" placeholder="等级名称"></td>
+                    <td><input type="text" class="form-control" placeholder="升级条件"></td>
+                    <td><input type="text" class="form-control" placeholder="折扣率"></td>
+                    <td>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="level${newLevel}-1">
+                            <label class="form-check-label" for="level${newLevel}-1">
+                                生日特权
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="level${newLevel}-2">
+                            <label class="form-check-label" for="level${newLevel}-2">
+                                优先发货
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="level${newLevel}-3">
+                            <label class="form-check-label" for="level${newLevel}-3">
+                                专属客服
+                            </label>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary save-level">保存</button>
+                        <button class="btn btn-sm btn-outline-danger delete-level">删除</button>
+                    </td>
+                `;
+                
+                table.appendChild(newRow);
+                
+                // 为新添加的保存按钮添加事件
+                const saveBtn = newRow.querySelector('.save-level');
+                saveBtn.addEventListener('click', function() {
+                    this.innerHTML = '<i class="fa fa-check mr-1"></i> 已保存';
+                    this.classList.remove('btn-outline-primary');
+                    this.classList.add('btn-outline-success');
+                    
+                    setTimeout(() => {
+                        this.innerHTML = '保存';
+                        this.classList.remove('btn-outline-success');
+                        this.classList.add('btn-outline-primary');
+                    }, 2000);
+                });
+                
+                // 为新添加的删除按钮添加事件
+                const deleteBtn = newRow.querySelector('.delete-level');
+                deleteBtn.addEventListener('click', function() {
+                    newRow.classList.add('fade-out');
+                    setTimeout(() => {
+                        newRow.remove();
+                        // 更新等级编号
+                        updateLevelNumbers();
+                    }, 300);
+                });
+            });
+            
+            // 删除会员等级函数
+            function updateLevelNumbers() {
+                const rows = document.querySelectorAll('.member-table tbody tr');
+                rows.forEach((row, index) => {
+                    row.querySelector('td:first-child').textContent = index + 1;
+                });
+            }
+            
+            // 初始化营销分析图表
+            if (document.getElementById('promotionChart')) {
+                // 营销活动效果图表
+                const promotionCtx = document.getElementById('promotionChart').getContext('2d');
+                new Chart(promotionCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['618大促', '周年庆', '新用户专享', '五一特惠', '双11'],
+                        datasets: [{
+                            label: '活动销售额(万元)',
+                            data: [120, 180, 95, 150, 230],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.7)',
+                                'rgba(54, 162, 235, 0.7)',
+                                'rgba(255, 206, 86, 0.7)',
+                                'rgba(75, 192, 192, 0.7)',
+                                'rgba(153, 102, 255, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+                
+                // 优惠券使用情况图表
+                const couponCtx = document.getElementById('couponChart').getContext('2d');
+                new Chart(couponCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['满减券', '折扣券', '免邮券'],
+                        datasets: [{
+                            label: '优惠券使用比例',
+                            data: [45, 30, 25],
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.7)',
+                                'rgba(255, 99, 132, 0.7)',
+                                'rgba(255, 206, 86, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(255, 206, 86, 1)'
+                                ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            }
+                        }
+                    }
+                });
+                
+                // 会员消费分析图表
+                const memberCtx = document.getElementById('memberChart').getContext('2d');
+                new Chart(memberCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                        datasets: [
+                            {
+                                label: '普通会员',
+                                data: [1200, 1900, 3000, 5000, 4000, 6000],
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                                tension: 0.3,
+                                fill: true
+                            },
+                            {
+                                label: '银卡会员',
+                                data: [3000, 4500, 6000, 8000, 9500, 11000],
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                                tension: 0.3,
+                                fill: true
+                            },
+                            {
+                                label: '金卡会员',
+                                data: [8000, 12000, 15000, 18000, 22000, 25000],
+                                borderColor: 'rgba(255, 206, 86, 1)',
+                                backgroundColor: 'rgba(255, 206, 86, 0.1)',
+                                tension: 0.3,
+                                fill: true
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: '消费金额(元)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // 导出数据按钮动画
+            document.getElementById('exportBtn').addEventListener('click', function() {
+                this.innerHTML = '<i class="fa fa-spinner fa-spin mr-1"></i> 导出中...';
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fa fa-check mr-1"></i> 已导出';
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fa fa-download mr-1"></i> 导出数据';
+                    }, 2000);
+                }, 1500);
+            });
+            
+            // 刷新按钮动画
+            document.getElementById('refreshBtn').addEventListener('click', function() {
+                this.innerHTML = '<i class="fa fa-spinner fa-spin mr-1"></i> 刷新中...';
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fa fa-check mr-1"></i> 已刷新';
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fa fa-refresh mr-1"></i> 刷新';
+                    }, 2000);
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>

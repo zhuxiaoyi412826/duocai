@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内容管理 - 多彩电商管理后台</title>
+    <!-- Bootstrap 5 核心样式 -->
+    <link href="bootstrap5.13/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 图标库 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- 富文本编辑器样式 -->
+    <link href="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.css" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <style>
+        .content-container { min-height: calc(100vh - 120px); }
+        .editor-toolbar { background-color: #f8f9fa; padding: 8px; border-bottom: 1px solid #e9ecef; }
+        .comment-card { margin-bottom: 1.5rem; padding: 1.25rem; border-radius: 4px; box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.05); }
+        .comment-actions { font-size: 0.875rem; color: #6c757d; }
+        .text-highlight { background-color: #fff3cd; }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="navbar navbar-light bg-white shadow sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="bi bi-pencil-square fs-3 text-primary me-2"></i>
+                <span class="fs-4 fw-bold">内容管理</span>
+            </a>
+            <div class="d-flex align-items-center">
+                <div class="position-relative me-4">
+                    <a href="#" class="text-dark text-decoration-none">
+                        <i class="bi bi-bell fs-4"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">5</span>
+                    </a>
+                </div>
+                <div class="dropdown">
+                    <a class="d-flex align-items-center text-dark text-decoration-none" href="#" id="userDropdown" data-bs-toggle="dropdown">
+                        <img src="https://via.placeholder.com/32" alt="头像" class="rounded-circle me-2" width="32" height="32">
+                        <span>管理员</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="#">账户设置</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">退出登录</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 左侧边栏 -->
+    <div class="offcanvas offcanvas-start sidebar-offcanvas" tabindex="-1" id="sidebar">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">内容分类</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="关闭"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action active">首页轮播图</a>
+                <a href="#" class="list-group-item list-group-item-action">商品详情页</a>
+                <a href="#" class="list-group-item list-group-item-action">促销活动页</a>
+                <a href="#" class="list-group-item list-group-item-action">用户评论</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <main class="container-fluid mt-4 px-4 content-container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 fw-bold">内容管理</h1>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#sidebar">
+                    <i class="bi bi-list"></i> 分类菜单
+                </button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mediaModal">
+                    <i class="bi bi-plus-lg me-1"></i> 新增内容
+                </button>
+            </div>
+        </div>
+
+        <!-- 选项卡导航 -->
+        <div class="nav nav-tabs mb-4">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#contentTab">文章/视频</button>
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#commentTab">评论管理</button>
+        </div>
+
+        <!-- 选项卡内容 -->
+        <div class="tab-content">
+            <!-- 内容编辑区 -->
+            <div class="tab-pane fade show active" id="contentTab">
+                <!-- 富文本编辑器 -->
+                <div class="editor-toolbar mb-3">
+                    <button class="btn btn-sm btn-light" data-command="bold"><i class="bi bi-bold"></i></button>
+                    <button class="btn btn-sm btn-light" data-command="italic"><i class="bi bi-italic"></i></button>
+                    <button class="btn btn-sm btn-light" data-command="link"><i class="bi bi-link"></i></button>
+                    <button class="btn btn-sm btn-light" data-command="image"><i class="bi bi-image"></i></button>
+                    <button class="btn btn-sm btn-light ms-auto" id="saveContent">保存</button>
+                </div>
+                <div id="contentEditor" class="form-control content-editor" style="min-height: 400px;" contenteditable="true">
+                    <h2>欢迎来到多彩电商</h2>
+                    <p>这里可以编辑首页轮播图文案或商品介绍视频链接</p>
+                    <div class="video-container mt-3">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="视频示例"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 评论管理区 -->
+            <div class="tab-pane fade" id="commentTab">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="h5 fw-bold">用户评论</h3>
+                    <div class="input-group" style="max-width: 300px;">
+                        <input type="text" class="form-control" placeholder="搜索评论内容">
+                        <button class="btn btn-primary"><i class="bi bi-search"></i></button>
+                    </div>
+                </div>
+
+                <!-- 评论列表 -->
+                <div class="comment-list">
+                    <div class="comment-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="d-flex gap-2">
+                                <img src="https://via.placeholder.com/48" alt="用户头像" class="rounded-circle" width="48" height="48">
+                                <div>
+                                    <h6 class="mb-1">用户A</h6>
+                                    <p class="mb-0 small text-muted">2023-05-22 14:30</p>
+                                </div>
+                            </div>
+                            <div class="comment-actions">
+                                <button class="btn btn-sm btn-light me-1" data-bs-toggle="tooltip" title="标记为精华">
+                                    <i class="bi bi-star"></i>
+                                </button>
+                                <button class="btn btn-sm btn-light me-1" data-bs-toggle="tooltip" title="回复评论">
+                                    <i class="bi bi-chat-left"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="删除评论">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="mt-2">商品质量很好，物流速度也很快！</p>
+                        <div class="reply-section mt-2 ps-4" style="display: none;">
+                            <form class="d-flex gap-2">
+                                <input type="text" class="form-control" placeholder="输入回复内容">
+                                <button class="btn btn-primary">发送回复</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="comment-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="d-flex gap-2">
+                                <img src="https://via.placeholder.com/48" alt="用户头像" class="rounded-circle" width="48" height="48">
+                                <div>
+                                    <h6 class="mb-1">用户B</h6>
+                                    <p class="mb-0 small text-muted">2023-05-21 10:15</p>
+                                </div>
+                            </div>
+                            <div class="comment-actions">
+                                <button class="btn btn-sm btn-light me-1"><i class="bi bi-star"></i></button>
+                                <button class="btn btn-sm btn-light me-1"><i class="bi bi-chat-left"></i></button>
+                                <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                        <p class="mt-2 text-highlight">客服态度较差，处理问题不及时</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 新增媒体模态弹窗 -->
+    <div class="modal fade" id="mediaModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">新增内容</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">内容标题</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">内容类型</label>
+                                <select class="form-control">
+                                    <option>文章</option>
+                                    <option>视频</option>
+                                    <option>图片轮播</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">内容摘要</label>
+                                <textarea class="form-control" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">上传媒体</label>
+                                <input type="file" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button class="btn btn-primary">提交审核</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 富文本编辑器脚本 -->
+    <script src="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 初始化富文本编辑器
+        const simplemde = new SimpleMDE({
+            element: document.getElementById('contentEditor'),
+            spellChecker: false,
+            status: false
+        });
+
+        // 评论回复展开
+        document.querySelectorAll('.bi-chat-left').forEach(button => {
+            button.addEventListener('click', () => {
+                const replySection = button.closest('.comment-card').querySelector('.reply-section');
+                replySection.style.display = replySection.style.display === 'none' ? 'block' : 'none';
+            });
+        });
+
+        // 工具提示
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        const tooltipList = tooltipTriggerList.map(tooltipTriggerEl => {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    </script>
+</body>
+</html>

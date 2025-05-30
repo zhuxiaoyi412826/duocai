@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>供应商管理 - 多彩电商</title>
+    <!-- 引入Bootstrap CSS -->
+    <link href="bootstrap5.13/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        /* 自定义样式 */
+        .sidebar {
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+        
+        .sidebar-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #e9ecef;
+        }
+        
+        .sidebar-link.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        
+        .content {
+            padding: 1.5rem;
+        }
+        
+        .card-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .status-pill {
+            display: inline-block;
+            padding: 0.25em 0.5em;
+            font-size: 0.875em;
+            font-weight: 500;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+        }
+        
+        .status-pending { background-color: #fff3cd; color: #856404; }
+        .status-approved { background-color: #d4edda; color: #155724; }
+        .status-rejected { background-color: #f8d7da; color: #721c24; }
+        
+        .action-btn {
+            transition: all 0.2s;
+        }
+        
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏导航 -->
+            <div class="col-md-3 col-lg-2 sidebar d-none d-md-block">
+                <div class="p-4">
+                    <h5 class="fw-bold text-primary">多彩电商</h5>
+                    <hr>
+                    <nav>
+                        <a href="#" class="sidebar-link"><i class="fa fa-tachometer mr-2"></i> 控制台</a>
+                        <a href="#" class="sidebar-link active"><i class="fa fa-truck mr-2"></i> 供应商管理</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-shopping-cart mr-2"></i> 采购管理</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-users mr-2"></i> 客户管理</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-cubes mr-2"></i> 商品管理</a>
+                        <a href="#" class="sidebar-link"><i class="fa fa-bar-chart mr-2"></i> 数据分析</a>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- 主内容区域 -->
+            <div class="col-md-9 col-lg-10 content">
+                <!-- 顶部导航栏 -->
+                <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow-sm mb-4">
+                    <div class="container-fluid">
+                        <button class="btn btn-outline-primary d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarToggle" aria-controls="sidebarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <div class="collapse navbar-collapse" id="sidebarToggle">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="#">供应商管理</a>
+                                </li>
+                            </ul>
+                            <div class="d-flex">
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-user mr-1"></i> 管理员
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                        <li><a class="dropdown-item" href="#">个人资料</a></li>
+                                        <li><a class="dropdown-item" href="#">设置</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="#">退出登录</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                
+                <!-- 页面标题和操作按钮 -->
+                <div class="d-flex justify-content-between align-items-center mb-4 fade-in">
+                    <h1 class="h3 mb-0 text-gray-800">供应商管理</h1>
+                    <button class="btn btn-primary action-btn" data-bs-toggle="modal" data-bs-target="#addSupplierModal">
+                        <i class="fa fa-plus mr-1"></i> 添加供应商
+                    </button>
+                </div>
+                
+                <!-- 供应商统计卡片 -->
+                <div class="row mb-4">
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2 card-hover">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">总供应商</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">128</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-building fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-success shadow h-100 py-2 card-hover">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">已认证</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">96</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-check-circle fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-warning shadow h-100 py-2 card-hover">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">待审核</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">24</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-clock-o fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-danger shadow h-100 py-2 card-hover">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">已拒绝</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">8</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-times-circle fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 供应商列表 -->
+                <div class="card shadow mb-4 fade-in" style="animation-delay: 0.2s;">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">供应商列表</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>供应商名称</th>
+                                        <th>联系人</th>
+                                        <th>电话</th>
+                                        <th>邮箱</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>优质电子科技</td>
+                                        <td>张经理</td>
+                                        <td>13800138000</td>
+                                        <td>zhang@example.com</td>
+                                        <td><span class="status-pill status-approved">已认证</span></td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <button class="btn btn-sm btn-outline-primary action-btn" data-bs-toggle="modal" data-bs-target="#viewSupplierModal">
+                                                    <i class="fa fa-eye"></i> 查看
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-success action-btn">
+                                                    <i class="fa fa-shopping-cart"></i> 采购
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>绿色环保包装</td>
+                                        <td>李主管</td>
+                                        <td>13900139000</td>
+                                        <td>li@example.com</td>
+                                        <td><span class="status-pill status-approved">已认证</span></td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <button class="btn btn-sm btn-outline-primary action-btn" data-bs-toggle="modal" data-bs-target="#viewSupplierModal">
+                                                    <i class="fa fa-eye"></i> 查看
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-success action-btn">
+                                                    <i class="fa fa-shopping-cart"></i> 采购
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>创新家居用品</td>
+                                        <td>王总监</td>
+                                        <td>13700137000</td>
+                                        <td>wang@example.com</td>
+                                        <td><span class="status-pill status-pending">待审核</span></td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <button class="btn btn-sm btn-outline-primary action-btn" data-bs-toggle="modal" data-bs-target="#viewSupplierModal">
+                                                    <i class="fa fa-eye"></i> 查看
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-warning action-btn">
+                                                    <i class="fa fa-edit"></i> 审核
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>快捷物流服务</td>
+                                        <td>赵经理</td>
+                                        <td>13600136000</td>
+                                        <td>zhao@example.com</td>
+                                        <td><span class="status-pill status-approved">已认证</span></td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <button class="btn btn-sm btn-outline-primary action-btn" data-bs-toggle="modal" data-bs-target="#viewSupplierModal">
+                                                    <i class="fa fa-eye"></i> 查看
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-success action-btn">
+                                                    <i class="fa fa-shopping-cart"></i> 采购
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>环球服饰制造</td>
+                                        <td>刘厂长</td>
+                                        <td>13500135000</td>
+                                        <td>liu@example.com</td>
+                                        <td><span class="status-pill status-rejected">已拒绝</span></td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <button class="btn btn-sm btn-outline-primary action-btn" data-bs-toggle="modal" data-bs-target="#viewSupplierModal">
+                                                    <i class="fa fa-eye"></i> 查看
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger action-btn">
+                                                    <i class="fa fa-trash"></i> 删除
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 采购订单管理 -->
+                <div class="card shadow mb-4 fade-in" style="animation-delay: 0.4s;">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">采购订单</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="btn-group" role="group" aria-label="订单筛选">
+                                <button type="button" class="btn btn-outline-primary">全部订单</button>
+                                <button type="button" class="btn btn-outline-primary">待支付</button>
+                                <button type="button" class="btn btn-outline-primary">已支付</button>
+                                <button type="button" class="btn btn-outline-primary">已完成</button>
+                            </div>
+                            <button class="btn btn-primary action-btn">
+                                <i class="fa fa-plus mr-1"></i> 新建订单
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>订单编号</th>
+                                        <th>供应商</th>
+                                        <th>日期</th>
+                                        <th>金额</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>ORD-20230501-001</td>
+                                        <td>优质电子科技</td>
+                                        <td>2023-05-01</td>
+                                        <td>¥12,500.00</td>
+                                        <td><span class="badge bg-success">已完成</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary action-btn">
+                                                <i class="fa fa-eye"></i> 详情
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>ORD-20230510-002</td>
+                                        <td>绿色环保包装</td>
+                                        <td>2023-05-10</td>
+                                        <td>¥8,300.00</td>
+                                        <td><span class="badge bg-warning">已支付</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary action-btn">
+                                                <i class="fa fa-eye"></i> 详情
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>ORD-20230515-003</td>
+                                        <td>快捷物流服务</td>
+                                        <td>2023-05-15</td>
+                                        <td>¥3,200.00</td>
+                                        <td><span class="badge bg-info">待支付</span></td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <button class="btn btn-sm btn-outline-primary action-btn">
+                                                    <i class="fa fa-eye"></i> 详情
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-success action-btn">
+                                                    <i class="fa fa-credit-card"></i> 支付
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 查看供应商详情模态框 -->
+    <div class="modal fade" id="viewSupplierModal" tabindex="-1" aria-labelledby="viewSupplierModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewSupplierModalLabel">供应商详情</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-body text-center">
+                                    <img src="https://picsum.photos/200/200?random=1" alt="供应商logo" class="rounded-circle mb-3" width="120">
+                                    <h5 class="card-title">优质电子科技</h5>
+                                    <p class="card-text text-muted">电子产品供应商</p>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="#" class="btn btn-outline-primary btn-sm"><i class="fa fa-phone"></i></a>
+                                        <a href="#" class="btn btn-outline-primary btn-sm"><i class="fa fa-envelope"></i></a>
+                                        <a href="#" class="btn btn-outline-primary btn-sm"><i class="fa fa-globe"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h6 class="m-0 font-weight-bold text-primary">基本信息</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <p><strong>联系人:</strong> 张经理</p>
+                                            <p><strong>电话:</strong> 13800138000</p>
+                                            <p><strong>邮箱:</strong> zhang@example.com</p>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <p><strong>地址:</strong> 北京市海淀区科技园区88号</p>
+                                            <p><strong>成立时间:</strong> 2015-03-15</p>
+                                            <p><strong>员工规模:</strong> 200-500人</p>
+                                        </div>
+                                    </div>
+                                    <p><strong>简介:</strong> 优质电子科技是一家专注于消费电子产品研发与生产的高科技企业，拥有先进的生产设备和专业的研发团队，为客户提供高品质的电子产品和解决方案。</p>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="m-0 font-weight-bold text-primary">产品分类</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4 mb-2">
+                                            <span class="badge bg-primary p-2">智能手机</span>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <span class="badge bg-primary p-2">平板电脑</span>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <span class="badge bg-primary p-2">智能穿戴</span>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <span class="badge bg-primary p-2">智能家居</span>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <span class="badge bg-primary p-2">音频设备</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">编辑供应商</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 添加供应商模态框 -->
+    <div class="modal fade" id="addSupplierModal" tabindex="-1" aria-labelledby="addSupplierModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addSupplierModalLabel">添加供应商</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="supplierName" class="form-label">供应商名称</label>
+                            <input type="text" class="form-control" id="supplierName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactPerson" class="form-label">联系人</label>
+                            <input type="text" class="form-control" id="contactPerson" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactPhone" class="form-label">联系电话</label>
+                            <input type="tel" class="form-control" id="contactPhone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactEmail" class="form-label">电子邮箱</label>
+                            <input type="email" class="form-control" id="contactEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="supplierAddress" class="form-label">地址</label>
+                            <textarea class="form-control" id="supplierAddress" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="supplierType" class="form-label">供应商类型</label>
+                            <select class="form-select" id="supplierType" required>
+                                <option value="">请选择...</option>
+                                <option value="1">原材料供应商</option>
+                                <option value="2">成品供应商</option>
+                                <option value="3">服务供应商</option>
+                                <option value="4">其他</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 引入Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 初始化动画
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加淡入动画效果
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach((el, index) => {
+                el.style.opacity = '0';
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+            
+            // 为卡片添加悬停效果
+            const cards = document.querySelectorAll('.card-hover');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.classList.add('shadow-lg');
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.classList.remove('shadow-lg');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+    
