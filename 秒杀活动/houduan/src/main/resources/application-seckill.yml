@@ -1,0 +1,29 @@
+# 秒杀模块配置
+seckill:
+  redis:
+    key-prefix: "seckill:"  # Redis key前缀
+    expire-time: 3600       # 缓存过期时间(秒)
+    stock-key: "stock:"     # 库存key
+    lock-key: "lock:"       # 分布式锁key
+    result-key: "result:"   # 秒杀结果key
+
+  # 秒杀相关配置
+  config:
+    verify-code-expire: 300  # 验证码过期时间(秒)
+    max-retry-times: 3      # 最大重试次数
+    token-valid-time: 1800  # 令牌有效期(秒)
+
+# Redis配置
+spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    database: 0
+    timeout: 3000
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0

@@ -1,179 +1,34 @@
-server:
-  port: 8080
-
+# Spring Boot应用配置
 spring:
-  # 数据源配置
+  application:
+    name: seckill-service
+  profiles:
+    active: dev
   datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/seckill?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/seckill?useSSL=false&serverTimezone=UTC&characterEncoding=utf8
     username: root
-    password: root
-    druid:
-      # 初始连接数
-      initial-size: 5
-      # 最小连接池数量
-      min-idle: 10
-      # 最大连接池数量
-      max-active: 20
-      # 配置获取连接等待超时的时间
-      max-wait: 60000
-      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
-      time-between-eviction-runs-millis: 60000
-      # 配置一个连接在池中最小生存的时间，单位是毫秒
-      min-evictable-idle-time-millis: 300000
-      # 配置一个连接在池中最大生存的时间，单位是毫秒
-      max-evictable-idle-time-millis: 900000
-      # 配置检测连接是否有效
-      validation-query: SELECT 1
-      test-while-idle: true
-      test-on-borrow: false
-      test-on-return: false
-      # 是否缓存preparedStatement，也就是PSCache
-      pool-prepared-statements: true
-      # 配置监控统计拦截的filters
-      filters: stat,wall,slf4j
-      # 打开PSCache，并且指定每个连接上PSCache的大小
-      max-pool-prepared-statement-per-connection-size: 20
-      # 配置监控页面访问登录名称
-      stat-view-servlet:
-        enabled: true
-        url-pattern: /druid/*
-        login-username: admin
-        login-password: admin
-      # 配置web监控的filter
-      web-stat-filter:
-        enabled: true
-        url-pattern: /*
-        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
-        session-stat-enable: true
-        session-stat-max-count: 1000
-        profile-enable: true
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
 
-# MyBatis-Plus配置
+# MyBatis Plus配置
 mybatis-plus:
-  # 实体类扫描包路径
+  mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.seckill.entity
-  # mapper.xml文件位置
-  mapper-locations: classpath*:/mapper/**/*.xml
-  # 全局配置
   global-config:
     db-config:
-      # 主键类型：AUTO-数据库自增
       id-type: auto
-      # 逻辑删除配置
       logic-delete-field: deleted
       logic-delete-value: 1
       logic-not-delete-value: 0
-  # 原生配置
   configuration:
-    # 驼峰命名转换
     map-underscore-to-camel-case: true
-    # 开启二级缓存
-    cache-enabled: true
-    # 打印SQL日志
-    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 服务器配置
+server:
+  port: 8080
   servlet:
-    context-path: /
-  tomcat:
-    max-threads: 200
-    max-connections: 1000
-    accept-count: 100
-    min-spare-threads: 10
-
-spring:
-  # Redis配置
-  redis:
-    host: localhost
-    port: 6379
-    password:  # Redis密码，如果没有设置密码可以留空
-    database: 0
-    timeout: 10000
-    lettuce:
-      pool:
-        # 连接池最大连接数（使用负值表示没有限制）
-        max-active: 8
-        # 连接池最大阻塞等待时间（使用负值表示没有限制）
-        max-wait: -1
-        # 连接池中的最大空闲连接
-        max-idle: 8
-        # 连接池中的最小空闲连接
-        min-idle: 0
-
-# Swagger配置
-springfox:
-  documentation:
-    swagger-ui:
-      enabled: true
-    swagger:
-      v2:
-        enabled: true
-    # 生产环境可以设置为false，关闭API文档
-    enabled: true
-    info:
-      title: 秒杀系统API文档
-      description: 秒杀系统后端接口文档
-      version: 1.0.0
-      contact:
-        name: 开发团队
-        email: support@example.com
-    # 配置需要生成文档的包路径
-    base-package: com.seckill.controller
-    # 配置需要生成文档的接口路径
-    paths-to-match: /api/**
-
-# 日志配置
-logging:
-  # 日志配置文件路径
-  config: classpath:logback-spring.xml
-  # 日志级别配置
-  level:
-    root: INFO
-    com.seckill: DEBUG
-    org.springframework: INFO
-    org.mybatis: INFO
-  # 日志文件配置
-  file:
-    # 日志文件路径
-    path: logs
-    # 日志文件名
-    name: ${logging.file.path}/seckill.log
-  # 日志格式配置
-  pattern:
-    # 控制台日志格式
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
-    # 文件日志格式
-    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
-
-# 自定义配置
-seckill:
-  # JWT配置
-  jwt:
-    # JWT密钥
-    secret: your-secret-key
-    # token有效期（秒）
-    expiration: 7200
-    # token刷新时间（秒）
-    refresh-time: 3600
-  # 安全配置
-  security:
-    # 允许连续登录失败次数
-    max-login-attempts: 5
-    # 账号锁定时间（分钟）
-    lock-duration: 30
-    # 密码加密迭代次数
-    password-hash-iterations: 10
-  # 限流配置
-  rate-limit:
-    # 是否启用限流
-    enabled: true
-    # 时间窗口（秒）
-    window: 1
-    # 允许请求次数
-    limit: 100
-  # 缓存配置
-  cache:
-    # 缓存过期时间（秒）
-    default-expiration: 3600
-    # 空值缓存过期时间（秒）
-    null-value-expiration: 60
+    context-path: /api

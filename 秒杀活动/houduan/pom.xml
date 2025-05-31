@@ -7,67 +7,66 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.5</version>
+        <version>2.7.0</version>
         <relativePath/>
     </parent>
 
     <groupId>com.seckill</groupId>
-    <artifactId>seckill-system</artifactId>
+    <artifactId>seckill</artifactId>
     <version>1.0.0</version>
-    <name>seckill-system</name>
-    <description>Seckill System Backend</description>
+    <name>seckill</name>
+    <description>秒杀系统模块</description>
 
     <properties>
-        <java.version>17</java.version>
-        <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
-        <springdoc.version>2.1.0</springdoc.version>
-        <hutool.version>5.8.21</hutool.version>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
+<repositories>
+    <repository>
+        <id>central</id>
+        <url>https://repo.maven.apache.org/maven2</url>
+    </repository>
+    <!-- 可选：阿里云镜像 -->
+    <repository>
+        <id>aliyun</id>
+        <url>https://maven.aliyun.com/repository/public</url>
+    </repository>
+</repositories>
+
     <dependencies>
-        <!-- Spring Boot Starters -->
+        <!-- Spring Boot Starter Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
 
-        <!-- Database -->
-        <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+        <!-- MyBatis Plus Spring Boot Starter -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>${mybatis-plus.version}</version>
+            <version>3.5.3.1</version>
         </dependency>
 
-        <!-- API Documentation -->
+        <!-- MySQL Connector -->
         <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>${springdoc.version}</version>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.29</version>
         </dependency>
 
-        <!-- Utils -->
+        <!-- Redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>${hutool.version}</version>
         </dependency>
 
         <!-- Test -->
@@ -75,10 +74,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
     </dependencies>
 
@@ -90,7 +85,7 @@
                 <configuration>
                     <excludes>
                         <exclude>
-                            <groupId>org.projectlombok</groupId>
+                            <groupId>org.springframework.boot</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
@@ -98,5 +93,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

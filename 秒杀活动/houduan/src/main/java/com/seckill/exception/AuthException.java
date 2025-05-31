@@ -1,66 +1,57 @@
 package com.seckill.exception;
 
-import com.seckill.common.Constants;
-
 /**
  * 认证异常类
  */
 public class AuthException extends BusinessException {
-    
+
     public AuthException(String message) {
-        super(Constants.UNAUTHORIZED_CODE, message);
+        super(message);
     }
-    
-    public AuthException(String message, Throwable cause) {
-        super(Constants.UNAUTHORIZED_CODE, message, cause);
+
+    public AuthException(int code, String message) {
+        super(code, message);
     }
-    
+
     /**
-     * 用户未登录异常
+     * 未认证异常
      */
-    public static AuthException notLogin() {
-        return new AuthException(Constants.UNAUTHORIZED_MESSAGE);
+    public static AuthException unauthorized() {
+        return new AuthException(401, "未认证，请先登录");
     }
-    
+
     /**
-     * 登录失败异常
-     */
-    public static AuthException loginFailed(String message) {
-        return new AuthException(message);
-    }
-    
-    /**
-     * 令牌过期异常
-     */
-    public static AuthException tokenExpired() {
-        return new AuthException("登录已过期，请重新登录");
-    }
-    
-    /**
-     * 令牌无效异常
-     */
-    public static AuthException invalidToken() {
-        return new AuthException("无效的认证令牌");
-    }
-    
-    /**
-     * 账号被锁定异常
-     */
-    public static AuthException accountLocked(int minutes) {
-        return new AuthException("账号已被锁定，请" + minutes + "分钟后再试");
-    }
-    
-    /**
-     * 账号或密码错误异常
+     * 无效凭证异常
      */
     public static AuthException invalidCredentials() {
-        return new AuthException("账号或密码错误");
+        return new AuthException(401, "用户名或密码错误");
     }
-    
+
     /**
-     * 账号已在其他设备登录异常
+     * 无权限异常
      */
-    public static AuthException accountLoginElsewhere() {
-        return new AuthException("账号已在其他设备登录");
+    public static AuthException forbidden() {
+        return new AuthException(403, "无权限访问");
+    }
+
+    /**
+     * Token过期异常
+     */
+    public static AuthException tokenExpired() {
+        return new AuthException(401, "Token已过期");
+    }
+
+    /**
+     * Token无效异常
+     */
+    public static AuthException tokenInvalid() {
+        return new AuthException(401, "Token无效");
+    }
+
+    /**
+     * 账号被禁用异常
+     */
+    public static AuthException accountDisabled() {
+        return new AuthException(403, "账号已被禁用");
     }
 }
