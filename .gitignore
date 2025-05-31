@@ -1,5 +1,4 @@
 *. log
-
-# 忽略target目录
-houduan/target/ 
-md/
+*. target
+*. md
+*. txt 

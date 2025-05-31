@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户行为分析 - 商家后台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- 引入图表库 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 引入日期选择器 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- 侧边栏导航 (与sales.html相同) -->
+        <div class="sidebar bg-white w-64 shadow-md">
+            <div class="p-4 border-b">
+                <h1 class="text-xl font-bold text-gray-800">商家后台</h1>
+            </div>
+            <nav class="p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="../index.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
+                            <span>控制面板</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../products/list.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
+                            <span>商品管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../orders/list.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
+                            <span>订单管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../users/list.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
+                            <span>用户管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../marketing/coupons.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
+                            <span>营销管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="sales.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
+                            <span>数据分析</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="flex-1 overflow-auto">
+            <!-- 顶部导航 (与sales.html相同) -->
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+                <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <div class="flex items-center space-x-4">
+                    <!-- 搜索和用户信息... -->
+                </div>
+            </header>
+
+            <!-- 用户行为分析内容 -->
+            <main class="p-6">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold">用户行为分析</h2>
+                        <div class="flex space-x-3">
+                            <button class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 flex items-center">
+                                <i class="fas fa-download mr-2"></i>导出数据
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 数据筛选 -->
+                    <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <select class="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="day">按日</option>
+                            <option value="week">按周</option>
+                            <option value="month">按月</option>
+                        </select>
+                        <input type="text" class="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 datepicker" placeholder="开始日期">
+                        <input type="text" class="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 datepicker" placeholder="结束日期">
+                        <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                            查询
+                        </button>
+                    </div>
+
+                    <!-- 用户活跃度分析 -->
+                    <div class="mb-8">
+                        <div class="border rounded-md p-4">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-medium text-gray-900">用户活跃度</h3>
+                                <div class="flex space-x-2">
+                                    <button class="px-3 py-1 text-xs border rounded-md bg-blue-50 text-blue-600">日活</button>
+                                    <button class="px-3 py-1 text-xs border rounded-md text-gray-600 hover:bg-gray-50">周活</button>
+                                    <button class="px-3 py-1 text-xs border rounded-md text-gray-600 hover:bg-gray-50">月活</button>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                <div class="border rounded-md p-4 bg-blue-50">
+                                    <p class="text-sm font-medium text-gray-700">日活跃用户(DAU)</p>
+                                    <p class="text-2xl font-bold mt-1">1,280</p>
+                                    <p class="text-sm text-green-600 mt-2">
+                                        <i class="fas fa-arrow-up mr-1"></i>8.5% 较上周
+                                    </p>
+                                </div>
+                                <div class="border rounded-md p-4 bg-green-50">
+                                    <p class="text-sm font-medium text-gray-700">周活跃用户(WAU)</p>
+                                    <p class="text-2xl font-bold mt-1">5,420</p>
+                                    <p class="text-sm text-green-600 mt-2">
+                                        <i class="fas fa-arrow-up mr-1"></i>12.3% 较上周
+                                    </p>
+                                </div>
+                                <div class="border rounded-md p-4 bg-purple-50">
+                                    <p class="text-sm font-medium text-gray-700">月活跃用户(MAU)</p>
+                                    <p class="text-2xl font-bold mt-1">18,650</p>
+                                    <p class="text-sm text-green-600 mt-2">
+                                        <i class="fas fa-arrow-up mr-1"></i>15.8% 较上月
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="h-80">
+                                <canvas id="activeUserChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 用户转化漏斗 -->
+                    <div class="mb-8">
+                        <div class="border rounded-md p-4">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">用户转化漏斗</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="h-64">
+                                    <canvas id="conversionChart"></canvas>
+                                </div>
+                                <div>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-700">访问量</p>
+                                            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-1">
+                                                <div class="bg-blue-600 h-2.5 rounded-full" style="width: 100%"></div>
+                                            </div>
+                                            <p class="text-sm text-gray-500 mt-1">10,000 人 (100%)</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-700">商品详情页访问</p>
+                                            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-1">
+                                                <div class="bg-blue-600 h-2.5 rounded-full" style="width: 65%"></div>
+                                            </div>
+                                            <p class="text-sm text-gray-500 mt-1">6,500 人 (65%)</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-700">加入购物车</p>
+                                            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-1">
+                                                <div class="bg-blue-600 h-2.5 rounded-full" style="width: 30%"></div>
+                                            </div>
+                                            <p class="text-sm text-gray-500 mt-1">3,000 人 (30%)</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-700">生成订单</p>
+                                            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-1">
+                                                <div class="bg-blue-600 h-2.5 rounded-full" style="width: 15%"></div>
+                                            </div>
+                                            <p class="text-sm text-gray-500 mt-1">1,500 人 (15%)</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-700">完成支付</p>
+                                            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-1">
+                                                <div class="bg-blue-600 h-2.5 rounded-full" style="width: 12%"></div>
+                                            </div>
+                                            <p class="text-sm text-gray-500 mt-1">1,200 人 (12%)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 热门页面排行 -->
+                    <div class="mb-8">
+                        <div class="border rounded-md p-4">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">热门页面排行</h3>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">排名</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">页面名称</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">访问量</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">平均停留时长</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">跳出率</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <!-- 页面行1 -->
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">1</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm font-medium text-gray-900">首页</div>
+                                                <div class="text-sm text-gray-500">/index.html</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">8,500</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">1分28秒</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">35%</div>
+                                            </td>
+                                        </tr>
+                                        <!-- 更多页面行... -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 用户留存分析 -->
+                    <div>
+                        <div class="border rounded-md p-4">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">用户留存分析</h3>
+                            <div class="h-80">
+                                <canvas id="retentionChart"></canvas>
+                            </div>
+                            <div class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <div class="border rounded-md p-4">
+                                    <p class="text-sm font-medium text-gray-700">次日留存率</p>
+                                    <p class="text-2xl font-bold mt-1">42%</p>
+                                </div>
+                                <div class="border rounded-md p-4">
+                                    <p class="text-sm font-medium text-gray-700">7日留存率</p>
+                                    <p class="text-2xl font-bold mt-1">28%</p>
+                                </div>
+                                <div class="border rounded-md p-4">
+                                    <p class="text-sm font-medium text-gray-700">30日留存率</p>
+                                    <p class="text-2xl font-bold mt-1">15%</p>
+                                </div>
+                                <div class="border rounded-md p-4">
+                                    <p class="text-sm font-medium text-gray-700">90日留存率</p>
+                                    <p class="text-2xl font-bold mt-1">8%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // 侧边栏折叠功能
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+        });
+
+        // 初始化日期选择器
+        flatpickr(".datepicker", {
+            dateFormat: "Y-m-d",
+            allowInput: true
+        });
+
+        // 用户活跃度图表
+        const activeUserCtx = document.getElementById('activeUserChart').getContext('2d');
+        const activeUserChart = new Chart(activeUserCtx, {
+            type: 'line',
+            data: {
+                labels: ['1日', '2日', '3日', '4日', '5日', '6日', '7日', '8日', '9日', '10日'],
+                datasets: [{
+                    label: '日活跃用户',
+                    data: [1200, 1150, 1300, 1250, 1400, 1350, 1500, 1450, 1600, 1550],
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // 用户转化漏斗图表
+        const conversionCtx = document.getElementById('conversionChart').getContext('2d');
+        const conversionChart = new Chart(conversionCtx, {
+            type: 'bar',
+            data: {
+                labels: ['访问量', '商品详情', '加购', '下单', '支付'],
+                datasets: [{
+                    label: '用户数',
+                    data: [10000, 6500, 3000, 1500, 1200],
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.7)',
+                        'rgba(59, 130, 246, 0.7)',
+                        'rgba(59, 130, 246, 0.7)',
+                        'rgba(59, 130, 246, 0.7)',
+                        'rgba(59, 130, 246, 0.7)'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // 用户留存图表
+       

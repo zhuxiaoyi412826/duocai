@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品分类 - 商家后台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- 引入树形结构插件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jstree@3.3.12/dist/themes/default/style.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jstree@3.3.12/dist/jstree.min.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- 侧边栏导航 (与list.html相同) -->
+        <div class="sidebar bg-white w-64 shadow-md">
+            <div class="p-4 border-b">
+                <h1 class="text-xl font-bold text-gray-800">商家后台</h1>
+            </div>
+            <nav class="p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="../index.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
+                            <span>控制面板</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="list.html" class="flex items-center p-2 text-blue-600 bg-blue-50 rounded">
+                            <span>商品管理</span>
+                        </a>
+                    </li>
+                    <!-- 其他导航项... -->
+                </ul>
+            </nav>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="flex-1 overflow-auto">
+            <!-- 顶部导航 (与list.html相同) -->
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+                <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <div class="flex items-center space-x-4">
+                    <!-- 搜索和用户信息... -->
+                </div>
+            </header>
+
+            <!-- 分类管理内容 -->
+            <main class="p-6">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold">商品分类管理</h2>
+                        <button id="addCategory" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                            <i class="fas fa-plus mr-2"></i>添加分类
+                        </button>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <!-- 分类树 -->
+                        <div class="w-full md:w-1/3">
+                            <div class="border rounded-md p-4">
+                                <div class="mb-4">
+                                    <input type="text" id="searchCategory" placeholder="搜索分类..." class="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div id="categoryTree" class="h-96 overflow-auto"></div>
+                            </div>
+                        </div>
+
+                        <!-- 分类详情 -->
+                        <div class="w-full md:w-2/3">
+                            <div id="categoryDetail" class="border rounded-md p-6">
+                                <div class="text-center text-gray-500 py-16">
+                                    <i class="fas fa-folder-open text-4xl mb-4"></i>
+                                    <p>请从左侧选择分类或添加新分类</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 添加/编辑分类模态框 -->
+    <div id="categoryModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium" id="modalTitle">添加分类</h3>
+                    <button id="closeModal" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="categoryForm">
+                    <input type="hidden" id="categoryId">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">分类名称</label>
+                            <input type="text" id="categoryName" class="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="请输入分类名称">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">上级分类</label>
+                            <select id="parentCategory" class="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">无 (一级分类)</option>
+                                <option value="1">电子产品</option>
+                                <option value="2">服装</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">分类图标</label>
+                            <div class="flex items-center">
+                                <div class="mr-4 w-16 h-16 border rounded-md flex items-center justify-center bg-gray-100">
+                                    <i class="fas fa-folder text-2xl text-gray-400"></i>
+                                </div>
+                                <button type="button" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                                    选择图标
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">排序</label>
+                            <input type="number" id="categorySort" class="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" value="0">
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end space-x-3">
+                        <button type="button" id="cancelModal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            取消
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                            保存
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 侧边栏折叠功能
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+        });
+
+        // 初始化分类树
+        $('#categoryTree').jstree({
+            'core': {
+                'data': [
+                    {
+                        "id": "1",
+                        "text": "电子产品",
+                        "children": [
+                            {
+                                "id": "1-1",
+                                "text": "手机",
+                                "children": [
+                                    {"id": "1-1-1", "text": "智能手机"},
+                                    {"id": "1-1-2", "text": "功能手机"}
+                                ]
+                            },
+                            {
+                                "id": "1-2",
+                                "text": "电脑",
+                                "children": [
+                                    {"id": "1-2-1", "text": "笔记本"},
+                                    {"id": "1-2-2", "text": "台式机"}
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "2",
+                        "text": "服装",
+                        "children": [
+                            {"id": "2-1", "text": "男装"},
+                            {"id": "2-2", "text": "女装"}
+                        ]
+                    }
+                ]
+            },
+            "plugins": ["search"]
+        });
+
+        // 分类搜索
+        $('#searchCategory').keyup(function() {
+            $('#categoryTree').jstree(true).search($(this).val());
+        });
+
+        // 分类选择事件
+        $('#categoryTree').on('select_node.jstree', function(e, data) {
+            const node = data.node;
+            // 显示分类详情
+            $('#categoryDetail').html(`
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-medium">${node.text}</h3>
+                    <div>
+                        <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 mr-2 edit-category">
+                            <i class="fas fa-edit mr-1"></i>编辑
+                        </button>
+                        <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 delete-category">
+                            <i class="fas fa-trash-alt mr-1"></i>删除
+                        </button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500 mb-2">基本信息</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <span class="text-sm text-gray-500">分类ID:</span>
+                                <span class="text-sm ml-2">${node.id}</span>
+                            </div>
+                            <div>
+                                <span class="text-sm text-gray-500">上级分类:</span>
+                                <span class="text-sm ml-2">${node.parent === '#' ? '无' : $('#categoryTree').jstree(true).get_text(node.parent)}</span>
+                            </div>
+                            <div>
+                                <span class="text-sm text-gray-500">排序:</span>
+                                <span class="text-sm ml-2">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500 mb-2">分类属性</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <span class="text-sm text-gray-500">商品数量:</span>
+                                <span class="text-sm ml-2">128</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+        });
+
+        // 模态框控制
+        $('#addCategory').click(function() {
+            $('#modalTitle').text('添加分类');
+            $('#categoryForm')[0].reset();
+            $('#categoryModal').removeClass('hidden');
+        });
+
+        $('#closeModal, #cancelModal').click(function() {
+            $('#categoryModal').addClass('hidden');
+        });
+
+        // 表单提交
+        $('#categoryForm').submit(function(e) {
+            e.preventDefault();
+            // 这里应该是AJAX提交表单数据
+            alert('分类保存成功');
+            $('#categoryModal').addClass('hidden');
+            // 刷新分类树
+        });
+    </script>
+</body>
+</html>

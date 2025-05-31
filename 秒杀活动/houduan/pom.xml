@@ -23,18 +23,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
-<repositories>
-    <repository>
-        <id>central</id>
-        <url>https://repo.maven.apache.org/maven2</url>
-    </repository>
-    <!-- 可选：阿里云镜像 -->
-    <repository>
-        <id>aliyun</id>
-        <url>https://maven.aliyun.com/repository/public</url>
-    </repository>
-</repositories>
-
     <dependencies>
         <!-- Spring Boot Starter Web -->
         <dependency>

@@ -1,0 +1,13 @@
+HTML页面中英文名称对照表：
+1. index.html - 首页(Homepage)
+2. products.html - 商品列表(Product List)
+3. products-local.html - 本地商品列表(Local Product List)
+4. product-detail.html - 商品详情(Product Detail)
+5. fenlei.html - 商品分类(Product Categories)
+6. cart.html - 购物车(Shopping Cart)
+7. checkout.html - 结算(Checkout)
+8. login.html - 登录(Login)
+9. register.html - 注册(Register)
+10. user-profile.html - 用户中心(User Profile)
+11. address.html - 地址管理(Address Management)
+12. category.html - 分类入口(Category Portal)

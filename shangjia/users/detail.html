@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户详情 - 商家后台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- 侧边栏导航 (与list.html相同) -->
+        <div class="sidebar bg-white w-64 shadow-md">
+            <div class="p-4 border-b">
+                <h1 class="text-xl font-bold text-gray-800">商家后台</h1>
+            </div>
+            <nav class="p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="../index.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
+                            <span>控制面板</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../products/list.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
+                            <span>商品管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../orders/list.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
+                            <span>订单管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="list.html" class="flex items-center p-2 text-blue-600 bg-blue-50 rounded">
+                            <span>用户管理</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="flex-1 overflow-auto">
+            <!-- 顶部导航 (与list.html相同) -->
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+                <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <div class="flex items-center space-x-4">
+                    <!-- 搜索和用户信息... -->
+                </div>
+            </header>
+
+            <!-- 用户详情内容 -->
+            <main class="p-6">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <!-- 用户信息和操作 -->
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-16 w-16">
+                                <img class="h-16 w-16 rounded-full" src="https://via.placeholder.com/80" alt="">
+                            </div>
+                            <div class="ml-4">
+                                <h2 class="text-xl font-semibold">张三</h2>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-sm text-gray-500 mr-4">用户ID: 10001</span>
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                        VIP用户
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-x-2">
+                            <button class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                                <i class="fas fa-edit mr-1"></i>编辑
+                            </button>
+                            <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                                <i class="fas fa-tag mr-1"></i>添加标签
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                        <!-- 用户基本信息 -->
+                        <div class="lg:col-span-1">
+                            <div class="border rounded-md p-4">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">基本信息</h3>
+                                <div class="space-y-3">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">注册时间</p>
+                                        <p class="text-sm text-gray-500">2023-01-15 10:30</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">手机号码</p>
+                                        <p class="text-sm text-gray-500">138****1234</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">电子邮箱</p>
+                                        <p class="text-sm text-gray-500">zhangsan@example.com</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">最后登录</p>
+                                        <p class="text-sm text-gray-500">2023-05-10 15:20</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 用户统计 -->
+                        <div class="lg:col-span-1">
+                            <div class="border rounded-md p-4">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">消费统计</h3>
+                                <div class="space-y-3">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">订单总数</p>
+                                        <p class="text-sm text-gray-500">12</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">消费总额</p>
+                                        <p class="text-sm text-gray-500">¥5899.00</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">平均客单价</p>
+                                        <p class="text-sm text-gray-500">¥491.58</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">最近订单</p>
+                                        <p class="text-sm text-gray-500">2023-05-01 (¥5899.00)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 用户标签 -->
+                        <div class="lg:col-span-1">
+                            <div class="border rounded-md p-4">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">标签与备注</h3>
+                                <div class="space-y-3">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900 mb-2">用户标签</p>
+                                        <div class="flex flex-wrap gap-2">
+                                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">高消费</span>
+                                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">活跃用户</span>
+                                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">电子产品偏好</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900 mb-1">备注</p>
+                                        <p class="text-sm text-gray-500">该用户对手机类产品特别感兴趣，可定向推送新品信息</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 收货地址 -->
+                    <div class="mb-8">
+                        <div class="border rounded-md p-4">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-medium text-gray-900">收货地址</h3>
+                                <button class="text-sm text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-plus mr-1"></i>添加地址
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- 地址1 -->
+                                <div class="border rounded-md p-4 relative">
+                                    <div class="flex justify-between">
+                                        <div>
+                                            <p class="font-medium">张三</p>
+                                            <p class="text-sm text-gray-500">138****1234</p>
+                                        </div>
+                                        <div class="flex space-x-2">
+                                            <button class="text-blue-600 hover:text-blue-800">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-800">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p class="mt-2 text-sm">北京市朝阳区建国路88号SOHO现代城A座2001室</p>
+                                    <span class="absolute top-2 right-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">默认地址</span>
+                                </div>
+                                <!-- 更多地址... -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 订单历史 -->
+                    <div class="mb-8">
+                        <div class="border rounded-md p-4">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">订单历史</h3>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">订单编号</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">下单时间</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">金额</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <!-- 订单行1 -->
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm font-medium text-blue-600">ORD20230501001</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">2023-05-01 14:30</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">¥5899.00</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                    待发货
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <a href="../orders/detail.html" class="text-blue-600 hover:text-blue-900">详情</a>
+                                            </td>
+                                        </tr>
+                                        <!-- 更多订单行... -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-4 flex justify-center">
+                                <button class="px-4 py-2 text-sm text-blue-600 hover:text-blue-800">
+                                    查看更多订单
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // 侧边栏折叠功能
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+        });
+    </script>
+</body>
+</html>

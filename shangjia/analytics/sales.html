@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>销售报表 - 商家后台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- 引入图表库 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 引入日期选择器 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- 侧边栏导航 -->
+        <div class="sidebar bg-white w-64 shadow-md">
+            <div class="p-4 border-b">
+                <h1 class="text-xl font-bold text-gray-800">商家后台</h1>
+            </div>
+            <nav class="p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="../index.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
+                            <span>控制面板</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../products/list.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
+                            <span>商品管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../orders/list.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
+                            <span>订单管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../users/list.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
+                            <span>用户管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../marketing/coupons.html" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
+                            <span>营销管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="sales.html" class="flex items-center p-2 text-blue-600 bg-blue-50 rounded">
+                            <span>数据分析</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="flex-1 overflow-auto">
+            <!-- 顶部导航 -->
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+                <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <div class="flex items-center space-x-4">
+                    <!-- 搜索和用户信息... -->
+                </div>
+            </header>
+
+            <!-- 数据分析内容 -->
+            <main class="p-6">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold">销售报表</h2>
+                        <div class="flex space-x-3">
+                            <button class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 flex items-center">
+                                <i class="fas fa-download mr-2"></i>导出数据
+                            </button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 flex items-center">
+                                <i class="fas fa-print mr-2"></i>打印报表
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 数据筛选 -->
+                    <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <select class="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="day">按日</option>
+                            <option value="week">按周</option>
+                            <option value="month">按月</option>
+                            <option value="year">按年</option>
+                        </select>
+                        <input type="text" class="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 datepicker" placeholder="开始日期">
+                        <input type="text" class="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 datepicker" placeholder="结束日期">
+                        <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                            查询
+                        </button>
+                    </div>
+
+                    <!-- 数据概览 -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="border rounded-md p-4 bg-blue-50">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-700">总销售额</p>
+                                    <p class="text-2xl font-bold mt-1">¥58,990.00</p>
+                                </div>
+                                <div class="bg-blue-100 p-2 rounded-md">
+                                    <i class="fas fa-shopping-cart text-blue-600"></i>
+                                </div>
+                            </div>
+                            <p class="text-sm text-green-600 mt-2">
+                                <i class="fas fa-arrow-up mr-1"></i>12.5% 较上月
+                            </p>
+                        </div>
+                        <div class="border rounded-md p-4 bg-green-50">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-700">订单总数</p>
+                                    <p class="text-2xl font-bold mt-1">128</p>
+                                </div>
+                                <div class="bg-green-100 p-2 rounded-md">
+                                    <i class="fas fa-receipt text-green-600"></i>
+                                </div>
+                            </div>
+                            <p class="text-sm text-green-600 mt-2">
+                                <i class="fas fa-arrow-up mr-1"></i>8.2% 较上月
+                            </p>
+                        </div>
+                        <div class="border rounded-md p-4 bg-purple-50">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-700">客单价</p>
+                                    <p class="text-2xl font-bold mt-1">¥460.86</p>
+                                </div>
+                                <div class="bg-purple-100 p-2 rounded-md">
+                                    <i class="fas fa-user-tag text-purple-600"></i>
+                                </div>
+                            </div>
+                            <p class="text-sm text-green-600 mt-2">
+                                <i class="fas fa-arrow-up mr-1"></i>4.3% 较上月
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 销售趋势图表 -->
+                    <div class="mb-8">
+                        <div class="border rounded-md p-4">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-medium text-gray-900">销售趋势</h3>
+                                <div class="flex space-x-2">
+                                    <button class="px-3 py-1 text-xs border rounded-md bg-blue-50 text-blue-600">日</button>
+                                    <button class="px-3 py-1 text-xs border rounded-md text-gray-600 hover:bg-gray-50">周</button>
+                                    <button class="px-3 py-1 text-xs border rounded-md text-gray-600 hover:bg-gray-50">月</button>
+                                </div>
+                            </div>
+                            <div class="h-80">
+                                <canvas id="salesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 商品销售排行 -->
+                    <div class="mb-8">
+                        <div class="border rounded-md p-4">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">商品销售排行</h3>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">排名</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">商品名称</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">销量</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">销售额</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">占比</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <!-- 商品行1 -->
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">1</span>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10">
+                                                        <img class="h-10 w-10 rounded-md object-cover" src="https://via.placeholder.com/40" alt="">
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">高端智能手机</div>
+                                                        <div class="text-sm text-gray-500">型号: X-2023</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">28</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">¥167,972.00</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="w-16 bg-gray-200 rounded-full h-2">
+                                                        <div class="bg-blue-600 h-2 rounded-full" style="width: 45%"></div>
+                                                    </div>
+                                                    <span class="ml-2 text-sm text-gray-500">45%</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!-- 更多商品行... -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 用户消费分析 -->
+                    <div>
+                        <div class="border rounded-md p-4">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">用户消费分析</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="text-md font-medium text-gray-700 mb-3">消费金额分布</h4>
+                                    <div class="h-64">
+                                        <canvas id="userSpendingChart"></canvas>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="text-md font-medium text-gray-700 mb-3">用户购买频次</h4>
+                                    <div class="h-64">
+                                        <canvas id="userFrequencyChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // 侧边栏折叠功能
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+        });
+
+        // 初始化日期选择器
+        flatpickr(".datepicker", {
+            dateFormat: "Y-m-d",
+            allowInput: true
+        });
+
+        // 销售趋势图表
+        const salesCtx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(salesCtx, {
+            type: 'line',
+            data: {
+                labels: ['1日', '2日', '3日', '4日', '5日', '6日', '7日', '8日', '9日', '10日'],
+                datasets: [{
+                    label: '销售额',
+                    data: [3200, 4500, 2800, 5100, 4900, 6200, 5800, 5400, 6700, 7100],
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // 用户消费金额分布图表
+        const spendingCtx = document.getElementById('userSpendingChart').getContext('2d');
+        const spendingChart = new Chart(spendingCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['0-100元', '100-500元', '500-1000元', '1000元以上'],
+                datasets: [{
+                    data: [35, 40, 15, 10],
+                    backgroundColor: [
+                        'rgb(59, 130, 246)',
+                        'rgb(16, 185, 129)',
+                        'rgb(245, 158, 11)',
+                        'rgb(139, 92, 246)'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                },
+                cutout: '70%'
+            }
+        });
+
+        // 用户购买频次图表
+        const frequencyCtx = document.getElementById('userFrequencyChart').getContext('2d');
+        const frequencyChart = new Chart(frequencyCtx, {
+            type: 'bar',
+            data: {
+                labels: ['1次', '2次', '3次', '4次', '5次以上'],
+                datasets: [{
+                    label: '用户数',
+                    data: [50, 30, 25, 15, 8],
+                    backgroundColor: 'rgb(16, 185, 129)',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
